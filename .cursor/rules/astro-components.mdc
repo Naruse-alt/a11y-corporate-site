@@ -1,0 +1,36 @@
+---
+description: Astroコンポーネントのアクセシビリティ規約
+globs: ["src/components/**/*.astro", "src/layouts/**/*.astro"]
+alwaysApply: false
+---
+
+# コンポーネント実装規約
+
+## 実装前に必ず行うこと
+
+「この機能をネイティブHTMLだけで実現できるか」を検討し、結論をコメントで書くこと。
+`<details>` `<dialog>` `<button>` で足りるなら、それを使う。
+
+## 状態の定義
+
+以下をすべて定義する：
+Default / Hover / Focus (focus-visible) / Active / Disabled
+該当する場合は Selected / Expanded / Error も
+
+## キーボード操作
+
+Tab / Shift+Tab / Enter / Space / Escape / 矢印 / Home / End の挙動を実装し、
+`docs/keyboard-specs.md` に記録すること。適用しないキーは「適用なし」と明記。
+
+## 個別の注意点
+
+- **モーダル**：フォーカストラップ、閉じた際にトリガー要素へフォーカスを戻す、背景スクロール制御、Escapeで閉じる。`<dialog>` の採用可否を先に検討
+- **ドロワー**：`aria-expanded` の状態変化。開いている間の背後コンテンツの扱い
+- **タブ**：手動アクティベーションと自動アクティベーションのどちらかを、理由とともに選ぶ
+- **アコーディオン**：`<details>`/`<summary>` で足りないか先に検討
+
+## 見出しとランドマーク
+
+- `h1` は1ページに1つ。レベルを飛ばさない（1.3.1 情報及び関係性 A）
+- 同種のランドマークが複数ある場合はラベルで区別する
+- リンクテキストに「詳しくはこちら」を使わない（2.4.4 A / 2.4.6 AA）
