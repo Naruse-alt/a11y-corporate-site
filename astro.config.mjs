@@ -1,0 +1,12 @@
+// @ts-check
+import { defineConfig } from 'astro/config';
+
+// site は本番URL確定時に差し替える。相対リンクの生成には影響しない。
+export default defineConfig({
+  site: 'https://example.com',
+  // Cloud Agent / CI 環境で外部からアクセスできるように 0.0.0.0 で待ち受ける
+  server: {
+    host: true,
+    port: 4321,
+  },
+});

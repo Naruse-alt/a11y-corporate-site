@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const services = [
+  {
+    title: 'アクセシビリティ診断',
+    body: 'WCAG 2.2 の達成基準に沿って、自動チェックと人手による検証を組み合わせて現状を可視化します。',
+  },
+  {
+    title: '設計・実装支援',
+    body: 'ネイティブHTMLを優先し、不要なARIAを足さない堅牢なコンポーネント設計を伴走します。',
+  },
+  {
+    title: '運用・教育',
+    body: '判断基準をドキュメント化し、チームが自走できる状態づくりを支援します。',
+  },
+];
+---
+
+<BaseLayout
+  title="ホーム"
+  description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
+>
+  <section class="hero">
+    <h1>誰も取り残さない Web を、標準の力で。</h1>
+    <p class="hero__lead">
+      Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
+      WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+    </p>
+    <p class="hero__actions">
+      <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
+    </p>
+  </section>
+
+  <section aria-labelledby="services-heading" class="services">
+    <h2 id="services-heading">提供サービス</h2>
+    <ul class="card-grid">
+      {
+        services.map((service) => (
+          <li class="card">
+            <h3>{service.title}</h3>
+            <p>{service.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-8);
+  }
+
+  .hero__lead {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+  }
+
+  .hero__actions {
+    margin-top: var(--space-6);
+  }
+
+  .services {
+    margin-top: var(--space-8);
+  }
+
+  .card-grid {
+    display: grid;
+    gap: var(--space-4);
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+
+  .card {
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .card h3 {
+    margin-top: 0;
+  }
+
+  .card p {
+    margin-bottom: 0;
+    color: var(--color-text-muted);
+  }
+</style>

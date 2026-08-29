@@ -1,0 +1,78 @@
+/*
+ * デザイントークン。
+ * 絶対規則: 色はすべてカスタムプロパティ経由で参照する。
+ * 生の HEX を各コンポーネントに書かない。
+ * コントラスト比の数値はここに書かず、scripts/contrast.mjs の出力を根拠とする。
+ *
+ * テーマ方針:
+ *   - :root                          … ライトモード(既定)
+ *   - :root[data-theme="dark"]       … 手動でダークを選択した場合
+ *   - @media (prefers-color-scheme)  … OS設定に追従(手動でライト指定時は除外)
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- 色: ライトモード --- */
+  --color-bg: #ffffff;
+  --color-surface: #f1f4f7;
+  --color-text: #1a1d21;
+  --color-text-muted: #55606b;
+  --color-link: #0b57a4;
+  --color-primary: #0b57a4;
+  --color-on-primary: #ffffff;
+  --color-border: #6b7480;
+
+  /* フォーカスリング: 明色 + 暗色の二重アウトライン。
+     明背景・暗背景の双方で視認できるようにする (2.4.7 A)。 */
+  --color-focus-inner: #ffffff;
+  --color-focus-outer: #0b3d70;
+
+  /* --- 間隔・タイポグラフィ --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", Meiryo, sans-serif;
+  --line-height-base: 1.7;
+  --measure: 42rem;
+
+  /* ターゲットサイズの基準 (2.5.8 AA)。本サイトは 44px を基準とする。 */
+  --target-min: 44px;
+  --radius: 8px;
+}
+
+/* ダークモードの色 (手動選択) */
+:root[data-theme="dark"] {
+  --color-bg: #12171d;
+  --color-surface: #1c232b;
+  --color-text: #eef2f6;
+  --color-text-muted: #b4bfca;
+  --color-link: #7fbaf5;
+  --color-primary: #7fbaf5;
+  --color-on-primary: #0a0f14;
+  --color-border: #8b95a1;
+  --color-focus-inner: #0a0f14;
+  --color-focus-outer: #bcd8f7;
+}
+
+/* ダークモードの色 (OS 追従。ただし手動でライト指定時は適用しない) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #12171d;
+    --color-surface: #1c232b;
+    --color-text: #eef2f6;
+    --color-text-muted: #b4bfca;
+    --color-link: #7fbaf5;
+    --color-primary: #7fbaf5;
+    --color-on-primary: #0a0f14;
+    --color-border: #8b95a1;
+    --color-focus-inner: #0a0f14;
+    --color-focus-outer: #bcd8f7;
+  }
+}
