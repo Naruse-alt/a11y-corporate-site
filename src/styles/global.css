@@ -1,0 +1,153 @@
+/*
+ * グローバルスタイル。色はすべて tokens.css のカスタムプロパティ経由。
+ * 固定高さは作らない (1.4.12)。text-spacing の上書きに耐える設計とする。
+ */
+
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* ページ内リンクでの移動時に見出しが上部に隠れないよう余白を確保 */
+  scroll-padding-top: var(--space-8);
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: var(--line-height-base);
+  /* 1.4.12 テキストの間隔: これらは上書きされても崩れない前提で最小限に設定 */
+  letter-spacing: 0.01em;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* リフロー(1.4.10): 幅の狭い環境でも横スクロールを出さない */
+img,
+picture,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+p,
+li {
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--color-link);
+}
+
+/* 本文中リンクは下線必須。色だけで情報を伝えない (1.4.1 A) */
+main a {
+  text-underline-offset: 0.15em;
+}
+
+/*
+ * フォーカスの可視化 (2.4.7 A)。
+ * 二重アウトライン(内側=明色 / 外側=暗色)で、明背景・暗背景の双方に乗る。
+ * outline を単独で消さず、必ず可視の代替表示を与える。
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus-inner);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-focus-outer);
+  border-radius: 2px;
+}
+
+/* focus-visible 非対応環境向けのフォールバック。
+   :focus-visible が効く環境では上書きされる。 */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus {
+  outline: 2px solid var(--color-focus-outer);
+  outline-offset: 2px;
+}
+
+/* コンテンツへスキップ (2.4.1 ブロックスキップ A) */
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -100%;
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: var(--radius);
+  text-decoration: underline;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* レイアウトの基本コンテナ。固定高さは持たせない。 */
+.container {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* ボタン類。最小ターゲット 44px (2.5.8 AA) を確保しつつ固定高さは避ける。 */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: var(--space-3) var(--space-6);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  /* 色相を変えず不透明度で状態変化を示す。forced-colors では無効化される。 */
+  opacity: 0.9;
+}
+
+.button--ghost {
+  background-color: transparent;
+  color: var(--color-link);
+  border-color: var(--color-border);
+}
+
+/* prefers-reduced-motion: 動きを減らす (2.3.3 AAA だが既定で配慮) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important; /* 動きの停止に必要 */
+    animation-iteration-count: 1 !important; /* 無限ループの停止に必要 */
+    transition-duration: 0.01ms !important; /* 遷移の停止に必要 */
+    scroll-behavior: auto !important; /* 慣性スクロールの停止に必要 */
+  }
+}
+
+/* forced-colors(強制カラーモード)で境界とフォーカスが失われないようにする */
+@media (forced-colors: active) {
+  .button {
+    border-color: ButtonText;
+  }
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-color: Highlight;
+  }
+}

@@ -1,0 +1,32 @@
+---
+// サイトフッター。連絡先やコピーライトを配置。
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="site-footer__note">
+      本サイトは Web アクセシビリティ対応を強みとする架空企業のポートフォリオです。
+      WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+    </p>
+    <p class="site-footer__copy">&copy; {year} Inclusive Works</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-12);
+    border-top: 2px solid var(--color-border);
+    background-color: var(--color-surface);
+    padding-block: var(--space-8);
+  }
+
+  .site-footer__note {
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__copy {
+    margin-bottom: 0;
+    color: var(--color-text-muted);
+  }
+</style>

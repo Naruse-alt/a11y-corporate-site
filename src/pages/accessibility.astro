@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// アクセシビリティ方針ページ。
+// 絶対規則: 未検証の内容は書かない。「axeでエラー0件だからAA達成」とは書かない。
+// 適合表明は「準拠」ではなく「達成目標とし、試験結果を公開する」と表現する。
+---
+
+<BaseLayout
+  title="アクセシビリティ方針"
+  description="Inclusive Works のアクセシビリティ方針。準拠基準、達成目標、試験の考え方を示します。"
+>
+  <article class="prose">
+    <h1>アクセシビリティ方針</h1>
+
+    <p>
+      本サイトは Web アクセシビリティを事業の中心に据えるポートフォリオです。
+      次の基準の達成を目標とし、試験結果を公開します。
+    </p>
+
+    <h2>準拠基準</h2>
+    <ul>
+      <li>WCAG 2.2 レベル AA を達成目標とします。</li>
+      <li>WCAG 2.2 は ISO/IEC 40500:2025 として国際規格化されています。</li>
+      <li>
+        国内の JIS X 8341-3 は現行 2016 年版ですが、ISO/IEC 40500:2025 との一致規格とする改正が進行中であり、本サイトはこれを先取りします。
+      </li>
+    </ul>
+
+    <h2>適合の表明について</h2>
+    <p>
+      本サイトは現時点で「準拠」を宣言するものではありません。
+      レベル AA の達成を<strong>目標</strong>とし、試験結果を継続的に公開する方針です。
+    </p>
+
+    <h2>実装上の方針</h2>
+    <ul>
+      <li>ネイティブ HTML 要素を最優先し、不要な ARIA を追加しません。</li>
+      <li>色のコントラスト比は検証スクリプトの出力を根拠として管理します。</li>
+      <li>キーボードのみで主要な操作が完結することを重視します。</li>
+      <li>JavaScript が無効でも主要コンテンツを読めるようにします。</li>
+    </ul>
+
+    <h2>試験の考え方</h2>
+    <p>
+      自動チェックで検出できる範囲と、スクリーンリーダーなど人手による検証が必要な範囲を分けて扱います。
+      自動チェックの結果のみをもって「レベル AA を達成した」とは判断しません。
+    </p>
+
+    <h2>お問い合わせ</h2>
+    <p>
+      アクセシビリティに関するご意見・ご指摘は
+      <a href="mailto:accessibility@example.com">accessibility@example.com</a>
+      までお寄せください。できる限り改善に努めます。
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .prose {
+    padding-block: var(--space-6);
+  }
+
+  .prose h2 {
+    margin-top: var(--space-8);
+  }
+
+  .prose ul {
+    padding-inline-start: 1.25em;
+  }
+
+  .prose li {
+    margin-block: var(--space-2);
+  }
+</style>
