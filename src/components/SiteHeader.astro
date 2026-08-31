@@ -20,7 +20,23 @@ const { path = '/' } = Astro.props as { path?: string };
 
 <header class="site-header" data-site-header>
   <div class="container site-header__inner">
-    <a class="site-header__brand" href="/">Inclusive&nbsp;Works</a>
+    <a class="site-header__brand" href="/">
+      {/* ブランドマーク（装飾）。currentColor 描画で forced-colors にも追従。 */}
+      <span class="site-header__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28" focusable="false">
+          <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2.5" />
+          <path
+            d="M9 16.5l4.5 4.5L23 11"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      <span class="site-header__wordmark">Inclusive&nbsp;Works</span>
+    </a>
 
     <nav class="primary-nav" aria-label="メインナビゲーション">
       <ul class="site-nav">
@@ -140,8 +156,12 @@ const { path = '/' } = Astro.props as { path?: string };
 
 <style>
   .site-header {
-    border-bottom: 2px solid var(--color-border);
-    background-color: var(--color-surface);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-sm);
   }
 
   .site-header__inner {
@@ -153,13 +173,21 @@ const { path = '/' } = Astro.props as { path?: string };
   }
 
   .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     color: var(--color-text);
     text-decoration: none;
   }
 
-  .site-header__brand:hover {
+  .site-header__mark {
+    display: inline-flex;
+    color: var(--color-primary);
+  }
+
+  .site-header__brand:hover .site-header__wordmark {
     text-decoration: underline;
   }
 

@@ -10,14 +10,15 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <div class="site-footer__about">
+      <p class="site-footer__brand">Inclusive Works</p>
       <p class="site-footer__note">
-        本サイトは Web アクセシビリティ対応を強みとする架空企業のポートフォリオです。
+        Web アクセシビリティ対応を強みとする架空企業のポートフォリオです。
         WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
       </p>
-      <p class="site-footer__copy">&copy; {year} Inclusive Works</p>
     </div>
 
     <nav class="site-footer__nav" aria-label="フッターナビゲーション">
+      <h2 class="site-footer__heading">サイト内リンク</h2>
       <ul>
         {
           navItems.map((item) => (
@@ -29,33 +30,48 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
   </div>
+
+  <div class="container site-footer__bar">
+    <p class="site-footer__copy">&copy; {year} Inclusive Works</p>
+  </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: var(--space-12);
-    border-top: 2px solid var(--color-border);
+    margin-top: var(--space-20);
+    border-top: 1px solid var(--color-border-subtle);
     background-color: var(--color-surface);
-    padding-block: var(--space-8);
+    padding-block: var(--space-12) var(--space-6);
   }
 
   .site-footer__inner {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-8);
+    gap: var(--space-8) var(--space-12);
     justify-content: space-between;
   }
 
   .site-footer__about {
-    flex: 1 1 18rem;
+    flex: 1 1 20rem;
+  }
+
+  .site-footer__brand {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
   }
 
   .site-footer__note {
+    margin: 0;
     color: var(--color-text-muted);
   }
 
-  .site-footer__copy {
-    margin-bottom: 0;
+  .site-footer__heading {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.06em;
     color: var(--color-text-muted);
   }
 
@@ -73,5 +89,17 @@ const year = new Date().getFullYear();
     align-items: center;
     min-height: var(--target-min);
     color: var(--color-link);
+  }
+
+  .site-footer__bar {
+    margin-top: var(--space-8);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .site-footer__copy {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 </style>
