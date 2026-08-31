@@ -22,71 +22,107 @@ const services = [
   description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
 >
   <section class="hero">
-    <h1>誰も取り残さない Web を、標準の力で。</h1>
-    <p class="hero__lead">
-      Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
-      WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
-    </p>
-    <p class="hero__actions">
-      <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
-    </p>
+    {/* 装飾。情報を持たないため aria-hidden。forced-colors では自然に無効化される。 */}
+    <span class="hero__decoration" aria-hidden="true"></span>
+
+    <div class="hero__body">
+      <p class="eyebrow">Web アクセシビリティ</p>
+      <h1>誰も取り残さない Web を、標準の力で。</h1>
+      <p class="lead">
+        Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
+        WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+      </p>
+      <p class="hero__actions">
+        <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
+        <a class="button button--ghost" href="#services">提供サービスを見る</a>
+      </p>
+    </div>
   </section>
 
-  <section aria-labelledby="services-heading" class="services">
-    <h2 id="services-heading">提供サービス</h2>
+  <section id="services" class="section" aria-labelledby="services-heading">
+    <div class="section__head">
+      <p class="eyebrow">Services</p>
+      <h2 id="services-heading">提供サービス</h2>
+      <p class="lead">診断から実装、運用・教育まで、アクセシビリティ対応を一貫して支援します。</p>
+    </div>
+
     <ul class="card-grid">
-      {
-        services.map((service) => (
-          <li class="card">
-            <h3>{service.title}</h3>
-            <p>{service.body}</p>
-          </li>
-        ))
-      }
+      <li class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M16.5 16.5 21 21"></path>
+          </svg>
+        </span>
+        <h3>{services[0].title}</h3>
+        <p>{services[0].body}</p>
+      </li>
+      <li class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M8 6 3 12l5 6"></path>
+            <path d="M16 6l5 6-5 6"></path>
+          </svg>
+        </span>
+        <h3>{services[1].title}</h3>
+        <p>{services[1].body}</p>
+      </li>
+      <li class="card">
+        <span class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
+            <path d="M17 8h3v11H8"></path>
+          </svg>
+        </span>
+        <h3>{services[2].title}</h3>
+        <p>{services[2].body}</p>
+      </li>
     </ul>
   </section>
 </BaseLayout>
 
 <style>
   .hero {
-    padding-block: var(--space-8);
+    position: relative;
+    margin-block-start: var(--space-4);
+    padding: clamp(var(--space-8), 5vw, var(--space-20)) clamp(var(--space-4), 4vw, var(--space-12));
+    /* プライマリ色をごく薄く敷いたパネル。色はトークン由来を color-mix で調整。 */
+    background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-bg));
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
   }
 
-  .hero__lead {
-    font-size: 1.125rem;
-    color: var(--color-text-muted);
+  /* 幾何学的な装飾。淡い同心円で奥行きを出す。 */
+  .hero__decoration {
+    position: absolute;
+    inset-block-start: -6rem;
+    inset-inline-end: -6rem;
+    inline-size: 20rem;
+    block-size: 20rem;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--color-primary) 16%, transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .hero__body {
+    position: relative;
+    max-width: 46rem;
+  }
+
+  .hero h1 {
+    font-size: var(--text-4xl);
   }
 
   .hero__actions {
-    margin-top: var(--space-6);
-  }
-
-  .services {
-    margin-top: var(--space-8);
-  }
-
-  .card-grid {
-    display: grid;
-    gap: var(--space-4);
-    margin: var(--space-6) 0 0;
-    padding: 0;
-    list-style: none;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  }
-
-  .card {
-    padding: var(--space-6);
-    background-color: var(--color-surface);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius);
-  }
-
-  .card h3 {
-    margin-top: 0;
-  }
-
-  .card p {
-    margin-bottom: 0;
-    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-8);
+    max-width: none;
   }
 </style>
