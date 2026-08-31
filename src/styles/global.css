@@ -76,6 +76,11 @@ main a {
   outline-offset: 2px;
 }
 
+/* ドロワー(<dialog>)展開中は背景のスクロールを止める */
+body.is-drawer-open {
+  overflow: hidden;
+}
+
 /* コンテンツへスキップ (2.4.1 ブロックスキップ A) */
 .skip-link {
   position: absolute;
