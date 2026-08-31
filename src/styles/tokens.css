@@ -1,7 +1,6 @@
 /*
  * デザイントークン。
- * 絶対規則: 色はすべてカスタムプロパティ経由で参照する。
- * 生の HEX を各コンポーネントに書かない。
+ * 絶対規則: 色はすべてカスタムプロパティ経由で参照する。生の HEX を各所に書かない。
  * コントラスト比の数値はここに書かず、scripts/contrast.mjs の出力を根拠とする。
  *
  * テーマ方針:
@@ -15,20 +14,22 @@
 
   /* --- 色: ライトモード --- */
   --color-bg: #ffffff;
-  --color-surface: #f1f4f7;
-  --color-text: #1a1d21;
-  --color-text-muted: #55606b;
+  --color-surface: #f2f5f8; /* 面(カード等) */
+  --color-surface-2: #e7edf3; /* 一段沈んだ面・淡いパネル */
+  --color-text: #14181c;
+  --color-text-muted: #505b66;
+  --color-border: #67717c; /* 意味を持つ境界(3:1以上) */
+  --color-border-subtle: #d3dbe3; /* 装飾的な区切り */
   --color-link: #0b57a4;
   --color-primary: #0b57a4;
+  --color-primary-strong: #084a8c; /* ホバー等の強調 */
   --color-on-primary: #ffffff;
-  --color-border: #6b7480;
 
-  /* フォーカスリング: 明色 + 暗色の二重アウトライン。
-     明背景・暗背景の双方で視認できるようにする (2.4.7 A)。 */
+  /* フォーカスリング: 明色 + 暗色の二重アウトライン (2.4.7 A)。 */
   --color-focus-inner: #ffffff;
   --color-focus-outer: #0b3d70;
 
-  /* --- 間隔・タイポグラフィ --- */
+  /* --- 余白 --- */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -36,43 +37,84 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
 
+  /* --- タイポグラフィ --- */
   --font-sans: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN",
     "Noto Sans JP", Meiryo, sans-serif;
-  --line-height-base: 1.7;
-  --measure: 42rem;
+
+  /* 流体タイプスケール(clamp)。拡大や狭幅でも破綻しないよう rem 基準。 */
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: clamp(1.125rem, 1.06rem + 0.3vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 1.875rem);
+  --text-3xl: clamp(1.875rem, 1.55rem + 1.6vw, 2.5rem);
+  --text-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.25rem);
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --line-height-base: 1.75;
+  --measure: 42rem; /* 本文の最適な行長 */
 
   /* ターゲットサイズの基準 (2.5.8 AA)。本サイトは 44px を基準とする。 */
   --target-min: 44px;
-  --radius: 8px;
+
+  /* --- 角丸・影 --- */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  /* 影は機能的なオーバーレイ表現のため rgb を直接指定(色トークン対象外)。
+     forced-colors では自動的に無効化され、境界線が構造を担保する。 */
+  --shadow-sm: 0 1px 2px rgb(15 23 32 / 6%), 0 2px 6px rgb(15 23 32 / 6%);
+  --shadow-md: 0 6px 16px rgb(15 23 32 / 10%), 0 2px 6px rgb(15 23 32 / 6%);
+
+  /* モーションのデフォルト(reduced-motion で無効化) */
+  --transition-fast: 120ms ease;
+  --transition: 200ms ease;
 }
 
 /* ダークモードの色 (手動選択) */
 :root[data-theme="dark"] {
   --color-bg: #12171d;
-  --color-surface: #1c232b;
+  --color-surface: #1b222a;
+  --color-surface-2: #232c36;
   --color-text: #eef2f6;
-  --color-text-muted: #b4bfca;
+  --color-text-muted: #b3bec9;
+  --color-border: #8b95a1;
+  --color-border-subtle: #33404b;
   --color-link: #7fbaf5;
   --color-primary: #7fbaf5;
+  --color-primary-strong: #a6cefb;
   --color-on-primary: #0a0f14;
-  --color-border: #8b95a1;
   --color-focus-inner: #0a0f14;
   --color-focus-outer: #bcd8f7;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
+  --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
 }
 
 /* ダークモードの色 (OS 追従。ただし手動でライト指定時は適用しない) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --color-bg: #12171d;
-    --color-surface: #1c232b;
+    --color-surface: #1b222a;
+    --color-surface-2: #232c36;
     --color-text: #eef2f6;
-    --color-text-muted: #b4bfca;
+    --color-text-muted: #b3bec9;
+    --color-border: #8b95a1;
+    --color-border-subtle: #33404b;
     --color-link: #7fbaf5;
     --color-primary: #7fbaf5;
+    --color-primary-strong: #a6cefb;
     --color-on-primary: #0a0f14;
-    --color-border: #8b95a1;
     --color-focus-inner: #0a0f14;
     --color-focus-outer: #bcd8f7;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
+    --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
   }
 }
