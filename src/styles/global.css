@@ -198,6 +198,37 @@ body.is-drawer-open {
   border-color: var(--color-primary);
 }
 
+/*
+ * テーマ切替(アイコンボタン)。
+ * このボタンは JS で動的生成されるため Astro のスコープ属性が付かない。
+ * よってスタイルはスコープ付きコンポーネントではなくグローバルに置く。
+ * 通常は枠・背景なしの控えめな表示、ホバーで淡い背景。44px を確保 (2.5.8 AA)。
+ */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--target-min);
+  block-size: var(--target-min);
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.theme-toggle svg {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+}
+
 /* --- カード --- */
 .card-grid {
   display: grid;
@@ -301,6 +332,10 @@ body.is-drawer-open {
 /* forced-colors(強制カラーモード)で境界とフォーカスが失われないようにする */
 @media (forced-colors: active) {
   .button {
+    border-color: ButtonText;
+  }
+
+  .theme-toggle {
     border-color: ButtonText;
   }
 
