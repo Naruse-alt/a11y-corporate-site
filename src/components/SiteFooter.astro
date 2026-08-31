@@ -1,15 +1,33 @@
 ---
-// サイトフッター。連絡先やコピーライトを配置。
+// サイトフッター。連絡先やコピーライトに加え、フッターナビを配置。
+// フッターナビはヘッダーと同じ情報源(navItems)を参照し、
+// JS無効時でもナビ到達性を二重化する (3.2.3 一貫したナビゲーション AA)。
+import { navItems } from '../data/nav';
+
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="container">
-    <p class="site-footer__note">
-      本サイトは Web アクセシビリティ対応を強みとする架空企業のポートフォリオです。
-      WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
-    </p>
-    <p class="site-footer__copy">&copy; {year} Inclusive Works</p>
+  <div class="container site-footer__inner">
+    <div class="site-footer__about">
+      <p class="site-footer__note">
+        本サイトは Web アクセシビリティ対応を強みとする架空企業のポートフォリオです。
+        WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+      </p>
+      <p class="site-footer__copy">&copy; {year} Inclusive Works</p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="フッターナビゲーション">
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
   </div>
 </footer>
 
@@ -21,6 +39,17 @@ const year = new Date().getFullYear();
     padding-block: var(--space-8);
   }
 
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    justify-content: space-between;
+  }
+
+  .site-footer__about {
+    flex: 1 1 18rem;
+  }
+
   .site-footer__note {
     color: var(--color-text-muted);
   }
@@ -28,5 +57,21 @@ const year = new Date().getFullYear();
   .site-footer__copy {
     margin-bottom: 0;
     color: var(--color-text-muted);
+  }
+
+  .site-footer__nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--color-link);
   }
 </style>
