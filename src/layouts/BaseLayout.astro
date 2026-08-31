@@ -3,15 +3,26 @@ import '../styles/global.css';
 import SkipLink from '../components/SkipLink.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 
 interface Props {
   title: string;
   description?: string;
 }
 
+interface Crumb {
+  href?: string;
+  label: string;
+}
+
 const { title, description } = Astro.props;
 const path = Astro.url.pathname;
 const fullTitle = `${title} | Inclusive Works`;
+
+// トップページ以外はパンくずを表示する。
+// 現在地ラベルはページの title をそのまま使うため、ページ側の追記は不要。
+const breadcrumbs: Crumb[] | null =
+  path === '/' ? null : [{ href: '/', label: 'ホーム' }, { label: title }];
 ---
 
 <!doctype html>
@@ -44,6 +55,7 @@ const fullTitle = `${title} | Inclusive Works`;
     <SiteHeader path={path} />
 
     <main id="main" class="container main-content">
+      {breadcrumbs && <Breadcrumb items={breadcrumbs} />}
       <slot />
     </main>
 

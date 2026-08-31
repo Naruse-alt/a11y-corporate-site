@@ -1,0 +1,65 @@
+---
+// パンくずリスト (2.4.8 現在位置 AAA)。
+// ネイティブの <nav> + 順序リストで表現し、現在地は aria-current="page" で示す。
+// 同種ランドマーク区別のため aria-label を付ける。
+export interface Crumb {
+  /** リンク先。最終項目（現在地）では省略する。 */
+  readonly href?: string;
+  readonly label: string;
+}
+
+const { items } = Astro.props as { items: readonly Crumb[] };
+---
+
+<nav class="breadcrumb" aria-label="パンくずリスト">
+  <ol>
+    {
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        return (
+          <li>
+            {item.href && !isLast ? (
+              <a href={item.href}>{item.label}</a>
+            ) : (
+              <span aria-current="page">{item.label}</span>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb {
+    margin-bottom: var(--space-6);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+  }
+
+  /* 区切り記号は装飾のため擬似要素で表示（読み上げ対象にしない） */
+  .breadcrumb li:not(:first-child)::before {
+    content: '/';
+    margin-inline-end: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumb a {
+    color: var(--color-link);
+  }
+
+  .breadcrumb [aria-current='page'] {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+</style>

@@ -1,32 +1,37 @@
 ---
 // サイトヘッダー。
-// ナビゲーションは <nav> で表現し、現在地は aria-current="page" で示す。
-// 同種ランドマークが複数になる場合に備え aria-label で区別する。
+//
+// ナビゲーション設計:
+//   - デスクトップ幅: ヘッダー内にリンクを横並び表示（.primary-nav）。
+//   - モバイル幅 かつ JS有効: ハンバーガーボタンで <dialog> ドロワーを開閉。
+//   - JS無効: 進歩的強化を行わず、.primary-nav をそのまま折り返し表示する。
+//     → JS無効でも全ページに到達できる（AGENTS.md の必須要件）。
+//
+// なぜ <dialog> か:
+//   モーダル型ドロワーに必要な「フォーカストラップ」「Escapeで閉じる」
+//   「背後の不活性化」「閉じたらトリガーへフォーカス復帰」を
+//   ネイティブが自前で提供するため、独自ARIA/JSを最小化できる
+//   (2.1.2 キーボードトラップなし A / 2.4.3 フォーカス順序 A / 4.1.2 A)。
+//   ハンバーガーの開閉状態のみ aria-expanded で明示する。
+import { navItems, isCurrentPath } from '../data/nav';
+
 const { path = '/' } = Astro.props as { path?: string };
-
-const links = [
-  { href: '/', label: 'ホーム' },
-  { href: '/accessibility/', label: 'アクセシビリティ方針' },
-];
-
-const isCurrent = (href: string) =>
-  href === '/' ? path === '/' : path.startsWith(href);
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">Inclusive&nbsp;Works</a>
 
-    <nav aria-label="サイト内メインナビゲーション">
+    <nav class="primary-nav" aria-label="メインナビゲーション">
       <ul class="site-nav">
         {
-          links.map((link) => (
+          navItems.map((item) => (
             <li>
               <a
-                href={link.href}
-                aria-current={isCurrent(link.href) ? 'page' : undefined}
+                href={item.href}
+                aria-current={isCurrentPath(item.href, path) ? 'page' : undefined}
               >
-                {link.label}
+                {item.label}
               </a>
             </li>
           ))
@@ -34,10 +39,104 @@ const isCurrent = (href: string) =>
       </ul>
     </nav>
 
-    {/* テーマ切替はJSによる進歩的強化。JS無効時はOS設定に従い、死んだUIを残さない。 */}
-    <div id="theme-toggle-slot"></div>
+    <div class="site-header__actions">
+      {/* テーマ切替はJSによる進歩的強化。JS無効時はOS設定に従い、死んだUIを残さない。 */}
+      <div id="theme-toggle-slot"></div>
+
+      {/*
+        ハンバーガー。既定は hidden で、JS有効時のみ表示する（進歩的強化）。
+        ラベルテキスト「メニュー」で名前を担保し、アイコンは装飾として aria-hidden。
+      */}
+      <button
+        id="nav-toggle"
+        class="nav-toggle"
+        type="button"
+        hidden
+        aria-expanded="false"
+        aria-controls="mobile-drawer"
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+        メニュー
+      </button>
+    </div>
   </div>
+
+  {/*
+    モバイル用ドロワー。ネイティブ <dialog> のモーダル表示を用いる。
+    閉じている間は表示されず、ランドラークとしても公開されない。
+  */}
+  <dialog id="mobile-drawer" class="nav-drawer" aria-labelledby="drawer-title">
+    <div class="nav-drawer__panel container">
+      <div class="nav-drawer__head">
+        {/* ダイアログ名は見出しを参照する（aria-label とテキストの二重化を避ける） */}
+        <h2 id="drawer-title" class="nav-drawer__title">メニュー</h2>
+        <button class="button button--ghost nav-drawer__close" type="button" data-drawer-close>
+          閉じる
+        </button>
+      </div>
+      <nav aria-label="モバイルナビゲーション">
+        <ul class="drawer-nav">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isCurrentPath(item.href, path) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </dialog>
 </header>
+
+<script>
+  // ドロワーの進歩的強化。<dialog> が使える環境でのみハンバーガーを有効化する。
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = document.getElementById('nav-toggle');
+  const drawer = document.getElementById('mobile-drawer');
+  const closeBtn = drawer?.querySelector<HTMLButtonElement>('[data-drawer-close]');
+
+  if (
+    header &&
+    toggle instanceof HTMLButtonElement &&
+    drawer instanceof HTMLDialogElement &&
+    typeof drawer.showModal === 'function'
+  ) {
+    // CSS のモバイル切替を有効化し、ハンバーガーを表示する
+    header.setAttribute('data-nav-enhanced', '');
+    toggle.hidden = false;
+
+    const open = (): void => {
+      drawer.showModal(); // フォーカストラップ・Escape・背景inert はネイティブが担保
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('is-drawer-open'); // 背景スクロール抑止
+    };
+
+    const close = (): void => {
+      if (drawer.open) drawer.close();
+    };
+
+    toggle.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+
+    // Escape / close() いずれの閉鎖でも状態を戻す。
+    // フォーカスは <dialog> の仕様でトリガー(ハンバーガー)へ自動復帰する。
+    drawer.addEventListener('close', () => {
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('is-drawer-open');
+    });
+
+    // ドロワー内リンク選択時は閉じる（同一ページ内アンカー等に配慮）
+    drawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', close);
+    });
+  }
+</script>
 
 <style>
   .site-header {
@@ -64,8 +163,15 @@ const isCurrent = (href: string) =>
     text-decoration: underline;
   }
 
-  nav {
+  .primary-nav {
     margin-inline-start: auto;
+  }
+
+  .site-header__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   .site-nav {
@@ -96,5 +202,153 @@ const isCurrent = (href: string) =>
     text-decoration: underline;
     text-underline-offset: 0.3em;
     text-decoration-thickness: 2px;
+  }
+
+  /* --- ハンバーガー --- */
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--target-min);
+    min-width: var(--target-min);
+    padding-inline: var(--space-3);
+    background-color: transparent;
+    color: var(--color-link);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .nav-toggle:hover {
+    text-decoration: underline;
+  }
+
+  /* 三本線アイコン（装飾）。currentColor で forced-colors にも追従。 */
+  .nav-toggle__bars,
+  .nav-toggle__bars::before,
+  .nav-toggle__bars::after {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    background-color: currentColor;
+  }
+
+  .nav-toggle__bars {
+    position: relative;
+  }
+
+  .nav-toggle__bars::before,
+  .nav-toggle__bars::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+  }
+
+  .nav-toggle__bars::before {
+    top: -6px;
+  }
+
+  .nav-toggle__bars::after {
+    top: 6px;
+  }
+
+  /* --- ドロワー(<dialog>) : モバイルは全画面メニュー --- */
+  .nav-drawer {
+    /*
+     * 画面全体を覆う全画面オーバーレイ。
+     * <dialog> 既定の height:fit-content を上書きして全高にする。
+     * 固定“ボックス”ではなく画面サイズ基準の全画面表示。内容が溢れたら
+     * スクロールさせ、テキスト拡大でも切れないようにする (1.4.12 / 1.4.10)。
+     */
+    margin: 0;
+    inset: 0;
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    overflow: auto;
+    padding: 0;
+    border: none;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .nav-drawer__panel {
+    /* .container の左右パディングを継承しつつ、上下の余白を足す */
+    padding-block: var(--space-4) var(--space-8);
+    /* 全高を活かして縦に配置 */
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100%;
+  }
+
+  .nav-drawer__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding-block-end: var(--space-4);
+    border-block-end: 2px solid var(--color-border);
+  }
+
+  .nav-drawer__title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .nav-drawer__close {
+    min-height: var(--target-min);
+  }
+
+  .drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drawer-nav a {
+    display: flex;
+    align-items: center;
+    min-height: var(--target-min);
+    padding: var(--space-3);
+    font-size: 1.125rem;
+    color: var(--color-link);
+    text-decoration: none;
+    border-radius: var(--radius);
+  }
+
+  .drawer-nav a:hover {
+    text-decoration: underline;
+  }
+
+  .drawer-nav a[aria-current='page'] {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    text-decoration-thickness: 2px;
+  }
+
+  /*
+   * 表示の切替。
+   * - 既定(JS無効/未強化): .primary-nav を常に表示、.nav-toggle は hidden 属性で非表示。
+   * - JS有効(data-nav-enhanced) かつ 狭い画面: インラインを隠しハンバーガーを表示。
+   * - 広い画面: 強化されていてもハンバーガーは隠す。
+   */
+  @media (max-width: 48rem) {
+    [data-nav-enhanced] .primary-nav {
+      display: none;
+    }
+  }
+
+  @media (min-width: 48.0625rem) {
+    .nav-toggle {
+      display: none;
+    }
   }
 </style>
