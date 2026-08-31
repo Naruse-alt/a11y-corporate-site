@@ -10,10 +10,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="アクセシビリティ方針"
   description="Inclusive Works のアクセシビリティ方針。準拠基準、達成目標、試験の考え方を示します。"
 >
-  <article class="prose">
+  <article class="prose policy">
+    <p class="eyebrow">Accessibility</p>
     <h1>アクセシビリティ方針</h1>
 
-    <p>
+    <p class="lead">
       本サイトは Web アクセシビリティを事業の中心に据えるポートフォリオです。
       次の基準の達成を目標とし、試験結果を公開します。
     </p>
@@ -28,7 +29,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </ul>
 
     <h2>適合の表明について</h2>
-    <p>
+    <p class="callout">
       本サイトは現時点で「準拠」を宣言するものではありません。
       レベル AA の達成を<strong>目標</strong>とし、試験結果を継続的に公開する方針です。
     </p>
@@ -57,19 +58,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-  .prose {
-    padding-block: var(--space-6);
+  .policy {
+    max-width: var(--measure);
   }
 
-  .prose h2 {
-    margin-top: var(--space-8);
-  }
-
-  .prose ul {
-    padding-inline-start: 1.25em;
-  }
-
-  .prose li {
-    margin-block: var(--space-2);
+  /* コールアウト内の強調は色だけに依存しない(太字併用) */
+  .policy .callout strong {
+    font-weight: 700;
   }
 </style>

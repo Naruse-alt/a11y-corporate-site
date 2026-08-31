@@ -3,16 +3,26 @@
     { "name": "本文テキスト / 背景", "fg": "--color-text", "bg": "--color-bg", "level": "AA" },
     { "name": "補足テキスト / 背景", "fg": "--color-text-muted", "bg": "--color-bg", "level": "AA" },
     { "name": "本文テキスト / 面", "fg": "--color-text", "bg": "--color-surface", "level": "AA" },
+    { "name": "補足テキスト / 面", "fg": "--color-text-muted", "bg": "--color-surface", "level": "AA" },
+    { "name": "本文テキスト / 面2", "fg": "--color-text", "bg": "--color-surface-2", "level": "AA" },
+    { "name": "補足テキスト / 面2", "fg": "--color-text-muted", "bg": "--color-surface-2", "level": "AA" },
     { "name": "リンク / 背景", "fg": "--color-link", "bg": "--color-bg", "level": "AA" },
+    { "name": "リンク / 面", "fg": "--color-link", "bg": "--color-surface", "level": "AA" },
     { "name": "ボタン文字 / プライマリ", "fg": "--color-on-primary", "bg": "--color-primary", "level": "AA" },
+    { "name": "ボタン文字 / プライマリ強調", "fg": "--color-on-primary", "bg": "--color-primary-strong", "level": "AA" },
     { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" }
   ],
   "dark": [
     { "name": "本文テキスト / 背景", "fg": "--color-text", "bg": "--color-bg", "level": "AA" },
     { "name": "補足テキスト / 背景", "fg": "--color-text-muted", "bg": "--color-bg", "level": "AA" },
     { "name": "本文テキスト / 面", "fg": "--color-text", "bg": "--color-surface", "level": "AA" },
+    { "name": "補足テキスト / 面", "fg": "--color-text-muted", "bg": "--color-surface", "level": "AA" },
+    { "name": "本文テキスト / 面2", "fg": "--color-text", "bg": "--color-surface-2", "level": "AA" },
+    { "name": "補足テキスト / 面2", "fg": "--color-text-muted", "bg": "--color-surface-2", "level": "AA" },
     { "name": "リンク / 背景", "fg": "--color-link", "bg": "--color-bg", "level": "AA" },
+    { "name": "リンク / 面", "fg": "--color-link", "bg": "--color-surface", "level": "AA" },
     { "name": "ボタン文字 / プライマリ", "fg": "--color-on-primary", "bg": "--color-primary", "level": "AA" },
+    { "name": "ボタン文字 / プライマリ強調", "fg": "--color-on-primary", "bg": "--color-primary-strong", "level": "AA" },
     { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" }
   ]
 }
