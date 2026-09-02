@@ -1,20 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const services = [
-  {
-    title: 'アクセシビリティ診断',
-    body: 'WCAG 2.2 の達成基準に沿って、自動チェックと人手による検証を組み合わせて現状を可視化します。',
-  },
-  {
-    title: '設計・実装支援',
-    body: 'ネイティブHTMLを優先し、不要なARIAを足さない堅牢なコンポーネント設計を伴走します。',
-  },
-  {
-    title: '運用・教育',
-    body: '判断基準をドキュメント化し、チームが自走できる状態づくりを支援します。',
-  },
-];
+import { services } from '../data/services';
 ---
 
 <BaseLayout
@@ -34,7 +20,7 @@ const services = [
       </p>
       <p class="hero__actions">
         <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
-        <a class="button button--ghost" href="#services">提供サービスを見る</a>
+        <a class="button button--ghost" href="/services/">提供サービスを見る</a>
       </p>
     </div>
   </section>
@@ -47,37 +33,44 @@ const services = [
     </div>
 
     <ul class="card-grid">
-      <li class="card">
-        <span class="card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="M16.5 16.5 21 21"></path>
-          </svg>
-        </span>
-        <h3>{services[0].title}</h3>
-        <p>{services[0].body}</p>
-      </li>
-      <li class="card">
-        <span class="card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M8 6 3 12l5 6"></path>
-            <path d="M16 6l5 6-5 6"></path>
-          </svg>
-        </span>
-        <h3>{services[1].title}</h3>
-        <p>{services[1].body}</p>
-      </li>
-      <li class="card">
-        <span class="card__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
-            <path d="M17 8h3v11H8"></path>
-          </svg>
-        </span>
-        <h3>{services[2].title}</h3>
-        <p>{services[2].body}</p>
-      </li>
+      {
+        services.map((service, index) => (
+          <li class="card">
+            <span class="card__icon" aria-hidden="true">
+              {index === 0 && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="M16.5 16.5 21 21"></path>
+                </svg>
+              )}
+              {index === 1 && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M8 6 3 12l5 6"></path>
+                  <path d="M16 6l5 6-5 6"></path>
+                </svg>
+              )}
+              {index === 2 && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
+                  <path d="M17 8h3v11H8"></path>
+                </svg>
+              )}
+            </span>
+            {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
+            <h3>
+              <a class="card__title-link" href={`/services/#${service.id}`}>
+                {service.title}
+              </a>
+            </h3>
+            <p>{service.summary}</p>
+          </li>
+        ))
+      }
     </ul>
+
+    <p class="services-more">
+      <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
+    </p>
   </section>
 </BaseLayout>
 
@@ -124,5 +117,20 @@ const services = [
     gap: var(--space-3);
     margin-block-start: var(--space-8);
     max-width: none;
+  }
+
+  /* カード見出しリンク。下線でリンクだと分かるようにする (1.4.1) */
+  .card__title-link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .card__title-link:hover {
+    color: var(--color-link);
+  }
+
+  .services-more {
+    margin-block-start: var(--space-8);
   }
 </style>
