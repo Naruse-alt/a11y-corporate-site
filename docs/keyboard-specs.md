@@ -53,3 +53,11 @@
 - 実体はリンク（`<a>`）またはボタン（`<button>`）。
 - **Enter**：常に作動。**Space**：`<button>` の場合のみ作動。
 - **矢印 / Home / End / Escape**：適用なし。
+
+## FAQ アコーディオン（ネイティブ `<details>` / `<summary>`）
+
+- **Tab / Shift+Tab**：各 `<summary>`（および回答内のリンク）間を移動する。
+- **Enter / Space**：フォーカス中の `<summary>` で質問を開閉する（ブラウザ標準）。
+- **矢印 / Home / End / Escape**：適用なし（ネイティブ `<details>` に矢印キーでの一括操作はない）。
+- 開閉状態は要素の `open` 属性としてブラウザが管理する。独自の `aria-expanded` は付けない。
+- JavaScript に依存しない。無効環境でも開閉できる。
