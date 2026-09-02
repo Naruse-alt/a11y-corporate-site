@@ -1,0 +1,281 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/*
+ * FAQ ページ（見せ場 #1）。
+ *
+ * なぜネイティブ <details>/<summary> か:
+ *   開閉・キーボード操作・開示状態をブラウザが持つため、
+ *   独自の aria-expanded / JS アコーディオンは不要
+ *   (1.3.1 情報及び関係性 A / 2.1.1 キーボード A)。
+ *   規約「ネイティブ最優先」「不要な ARIA を付けない」に合致する。
+ *
+ * 「すべて開く/閉じる」は今回スコープ外（別判断）。
+ */
+
+interface FaqItem {
+  readonly question: string;
+  readonly answerHtml: string;
+}
+
+interface FaqCategory {
+  readonly id: string;
+  readonly heading: string;
+  readonly items: readonly FaqItem[];
+}
+
+const categories: readonly FaqCategory[] = [
+  {
+    id: 'policy',
+    heading: '方針・対応範囲',
+    items: [
+      {
+        question: 'どの基準を達成目標にしていますか？',
+        answerHtml: `
+          <p>
+            Web Content Accessibility Guidelines (WCAG) 2.2 のレベル AA を達成目標とします。
+            WCAG 2.2 は ISO/IEC 40500:2025 として国際規格化されています。
+            国内の JIS X 8341-3 は現行 2016 年版ですが、ISO/IEC 40500:2025 との一致規格とする改正が進行中であり、本サイトはこれを先取りします。
+          </p>
+        `,
+      },
+      {
+        question: '「準拠」と表明していますか？',
+        answerHtml: `
+          <p>
+            いいえ。本サイトは現時点で「準拠」を宣言するものではありません。
+            レベル AA の達成を<strong>目標</strong>とし、試験結果を継続的に公開する方針です。
+            詳細は <a href="/accessibility/">アクセシビリティ方針</a> を参照してください。
+          </p>
+        `,
+      },
+      {
+        question: '対応範囲はどこまでですか？',
+        answerHtml: `
+          <p>
+            本コーポレートサイト全体（ページ本文、共通ヘッダー／フッター、ナビゲーション、テーマ切替など）を対象とします。
+            外部埋め込みコンテンツや第三者サービスが提供する部分がある場合は、その旨を明示し、可能な範囲で代替手段を用意します。
+          </p>
+        `,
+      },
+    ],
+  },
+  {
+    id: 'process',
+    heading: '制作プロセス',
+    items: [
+      {
+        question: 'なぜネイティブ HTML を優先するのですか？',
+        answerHtml: `
+          <p>
+            <code>&lt;button&gt;</code>、<code>&lt;details&gt;</code>、<code>&lt;dialog&gt;</code>、<code>&lt;nav&gt;</code> など、ブラウザがすでに名前・役割・キーボード操作を持つ要素を使うと、独自の ARIA や JavaScript を最小化できます。
+            バグの余地が減り、支援技術との互換性も安定しやすいためです。
+          </p>
+        `,
+      },
+      {
+        question: 'JavaScript が無効でも使えますか？',
+        answerHtml: `
+          <p>
+            主要コンテンツは JavaScript なしで読めます。
+            テーマ切替やモバイルのハンバーガーメニューは進歩的強化で、JS 無効時は OS の色設定やインラインナビにフォールバックします。
+            この FAQ の開閉も <code>&lt;details&gt;</code> の標準動作のため、JS に依存しません。
+          </p>
+        `,
+      },
+      {
+        question: 'コントラスト比はどのように管理していますか？',
+        answerHtml: `
+          <p>
+            色はカスタムプロパティに集約し、意味のある前景／背景ペアを <code>scripts/contrast.mjs</code> で機械判定します。
+            コントラスト比の数値はスクリプト出力のみを根拠とし、推測や暗算では記載しません。最終判定は人間が行います。
+          </p>
+        `,
+      },
+    ],
+  },
+  {
+    id: 'testing',
+    heading: '試験・適合表明',
+    items: [
+      {
+        question: '自動チェックだけで適合を判断しますか？',
+        answerHtml: `
+          <p>
+            しません。自動チェックで検出できる範囲と、スクリーンリーダーなど人手による検証が必要な範囲を分けて扱います。
+            「axe でエラー 0 件だからレベル AA を達成した」といった結論は書きません。
+          </p>
+        `,
+      },
+      {
+        question: 'キーボードだけで操作できますか？',
+        answerHtml: `
+          <p>
+            主要な操作はキーボードのみで完結することを重視しています。
+            各インタラクティブ要素のキー割り当ては <code>docs/keyboard-specs.md</code> に記録しています。
+            この FAQ では Tab で移動し、Enter または Space で質問の開閉ができます。
+          </p>
+        `,
+      },
+      {
+        question: '意見や不具合の報告先はどこですか？',
+        answerHtml: `
+          <p>
+            アクセシビリティに関するご意見・ご指摘は
+            <a href="mailto:accessibility@example.com">accessibility@example.com</a>
+            までお寄せください。できる限り改善に努めます。
+          </p>
+        `,
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="よくある質問"
+  description="Inclusive Works のよくある質問。方針・制作プロセス・試験についての回答を、ネイティブの折りたたみで公開しています。"
+>
+  <article class="faq-page">
+    <header class="faq-page__intro">
+      <p class="eyebrow">FAQ</p>
+      <h1>よくある質問</h1>
+      <p class="lead">
+        方針・制作の考え方・試験について、よくいただく質問をまとめました。
+        各質問はネイティブの折りたたみ（
+        <code>&lt;details&gt;</code>）で開閉できます。JavaScript は不要です。
+      </p>
+    </header>
+
+    {
+      categories.map((category) => (
+        <section class="faq-category section" aria-labelledby={`faq-${category.id}`}>
+          <h2 id={`faq-${category.id}`}>{category.heading}</h2>
+          <div class="faq-list">
+            {category.items.map((item) => (
+              <details class="faq-item">
+                <summary class="faq-item__summary">
+                  <span class="faq-item__question">{item.question}</span>
+                </summary>
+                <div class="faq-item__answer prose" set:html={item.answerHtml} />
+              </details>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+
+    <p class="faq-page__cta">
+      <a class="button button--ghost" href="/accessibility/">アクセシビリティ方針を読む</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .faq-page {
+    max-width: 48rem;
+  }
+
+  .faq-page__intro {
+    margin-block-end: var(--space-4);
+  }
+
+  .faq-page__intro h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .faq-category {
+    margin-block-start: var(--space-12);
+  }
+
+  .faq-category h2 {
+    margin-block-end: var(--space-4);
+  }
+
+  /*
+   * FAQ リスト。カードではなく区切り線で構造を示す。
+   * 固定高さは作らない (1.4.12)。ターゲットは summary で 44px 確保 (2.5.8)。
+   */
+  .faq-list {
+    border-block-start: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item {
+    border-block-end: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-item__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--target-min);
+    padding-block: var(--space-3);
+    padding-inline: var(--space-1) var(--space-2);
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  /* WebKit のデフォルト三角を消し、自前のインジケータに統一する */
+  .faq-item__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item__summary::before {
+    content: '';
+    flex-shrink: 0;
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-inline-end: 2px solid var(--color-primary);
+    border-block-end: 2px solid var(--color-primary);
+    transform: rotate(-45deg);
+    transition: transform var(--transition-fast);
+  }
+
+  .faq-item[open] > .faq-item__summary::before {
+    transform: rotate(45deg);
+  }
+
+  .faq-item__question {
+    flex: 1;
+    text-wrap: pretty;
+  }
+
+  .faq-item__answer {
+    padding-block: 0 var(--space-6);
+    padding-inline: calc(0.55rem + var(--space-3)) var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  .faq-item__answer > :first-child {
+    margin-block-start: 0;
+  }
+
+  .faq-item__answer strong {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+
+  .faq-item__answer code {
+    font-size: 0.95em;
+    padding: 0.1em 0.35em;
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .faq-page__cta {
+    margin-block-start: var(--space-16);
+  }
+
+  @media (forced-colors: active) {
+    .faq-list,
+    .faq-item {
+      border-color: CanvasText;
+    }
+
+    .faq-item__summary::before {
+      border-color: ButtonText;
+    }
+  }
+</style>
