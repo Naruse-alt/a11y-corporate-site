@@ -12,6 +12,7 @@ export interface NavItem {
 export const navItems: readonly NavItem[] = [
   { href: '/', label: 'ホーム' },
   { href: '/accessibility/', label: 'アクセシビリティ方針' },
+  { href: '/faq/', label: 'よくある質問' },
 ] as const;
 
 /**
