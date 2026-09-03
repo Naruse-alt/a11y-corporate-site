@@ -1,17 +1,36 @@
-// サイト内ナビゲーションの単一情報源。
-// ヘッダー・モバイルドロワー・フッターがこの定義を共有することで、
-// 3.2.3 一貫したナビゲーション AA / 3.2.4 一貫した識別性 AA を担保する。
+// サイト内ナビゲーションの情報源。
+//
+// ヘッダー（とモバイルドロワー）は primaryNavItems、
+// フッターは footerNavItems を参照する。
+// ラベルは両リストで同一文言にし、3.2.4 一貫した識別性 AA を担保する。
+// 順序も「主要 → 補足」の関係を崩さない（3.2.3 一貫したナビゲーション AA）。
 
 export interface NavItem {
   /** 遷移先のパス（末尾スラッシュあり） */
   readonly href: string;
-  /** 表示ラベル（全ナビで同一の文言を使う） */
+  /** 表示ラベル（掲載箇所で同一の文言を使う） */
   readonly label: string;
 }
 
-export const navItems: readonly NavItem[] = [
+/**
+ * ヘッダー／ドロワー用の主要ナビ。
+ * 項目数を抑え、狭い画面でも折り返しや圧迫を起きにくくする。
+ */
+export const primaryNavItems: readonly NavItem[] = [
   { href: '/', label: 'ホーム' },
   { href: '/services/', label: 'サービス' },
+  { href: '/about/', label: '会社概要' },
+  { href: '/accessibility/', label: 'アクセシビリティ方針' },
+] as const;
+
+/**
+ * フッター用。主要ナビに加え、二次的な到達先（FAQ 等）を含める。
+ * JS 無効時でも全ページへフッターから到達できる。
+ */
+export const footerNavItems: readonly NavItem[] = [
+  { href: '/', label: 'ホーム' },
+  { href: '/services/', label: 'サービス' },
+  { href: '/about/', label: '会社概要' },
   { href: '/accessibility/', label: 'アクセシビリティ方針' },
   { href: '/faq/', label: 'よくある質問' },
 ] as const;
