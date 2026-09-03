@@ -1,8 +1,9 @@
 ---
 // サイトフッター。連絡先やコピーライトに加え、フッターナビを配置。
-// フッターナビはヘッダーと同じ情報源(navItems)を参照し、
-// JS無効時でもナビ到達性を二重化する (3.2.3 一貫したナビゲーション AA)。
-import { navItems } from '../data/nav';
+// フッターは footerNavItems（主要＋二次）を参照し、
+// ヘッダーに載せないページ（FAQ 等）も含めて到達性を担保する
+// (3.2.3 一貫したナビゲーション AA)。
+import { footerNavItems } from '../data/nav';
 
 const year = new Date().getFullYear();
 ---
@@ -21,7 +22,7 @@ const year = new Date().getFullYear();
       <h2 class="site-footer__heading">サイト内リンク</h2>
       <ul>
         {
-          navItems.map((item) => (
+          footerNavItems.map((item) => (
             <li>
               <a href={item.href}>{item.label}</a>
             </li>

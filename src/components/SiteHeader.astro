@@ -13,7 +13,7 @@
 //   ネイティブが自前で提供するため、独自ARIA/JSを最小化できる
 //   (2.1.2 キーボードトラップなし A / 2.4.3 フォーカス順序 A / 4.1.2 A)。
 //   ハンバーガーの開閉状態のみ aria-expanded で明示する。
-import { navItems, isCurrentPath } from '../data/nav';
+import { primaryNavItems, isCurrentPath } from '../data/nav';
 
 const { path = '/' } = Astro.props as { path?: string };
 ---
@@ -41,7 +41,7 @@ const { path = '/' } = Astro.props as { path?: string };
     <nav class="primary-nav" aria-label="メインナビゲーション">
       <ul class="site-nav">
         {
-          navItems.map((item) => (
+          primaryNavItems.map((item) => (
             <li>
               <a
                 href={item.href}
@@ -93,7 +93,7 @@ const { path = '/' } = Astro.props as { path?: string };
       <nav aria-label="モバイルナビゲーション">
         <ul class="drawer-nav">
           {
-            navItems.map((item) => (
+            primaryNavItems.map((item) => (
               <li>
                 <a
                   href={item.href}

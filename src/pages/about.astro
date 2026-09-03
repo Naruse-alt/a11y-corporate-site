@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/*
+ * 会社概要ページ。
+ *
+ * 長文の説明ページのため、方針ページと同様に prose＋見出し構造で示す。
+ * 独自のタブやアコーディオンは使わない（すべて最初から読める / JS 不要）。
+ * 実在の所在地・電話などは置かず、架空のポートフォリオである旨を明示する。
+ */
+---
+
+<BaseLayout
+  title="会社概要"
+  description="Inclusive Works の会社概要。Web アクセシビリティを中心に据える架空企業の理念と、ネイティブ HTML を優先する考え方を紹介します。"
+>
+  <article class="prose about">
+    <p class="eyebrow">About</p>
+    <h1>会社概要</h1>
+
+    <p class="lead">
+      Inclusive Works は、Web アクセシビリティ対応を強みとする架空の制作会社です。
+      標準の力で、誰も取り残さない Web づくりを支援します。
+    </p>
+
+    <h2>事業内容</h2>
+    <p>
+      WCAG 2.2 レベル AA の達成を目標とした、次の支援を行います。
+    </p>
+    <ul>
+      <li>アクセシビリティ診断</li>
+      <li>設計・実装支援</li>
+      <li>運用・教育</li>
+    </ul>
+    <p>
+      各サービスの詳細は
+      <a href="/services/">提供サービス</a>
+      を参照してください。
+    </p>
+
+    <h2>大切にしていること</h2>
+    <ul>
+      <li>
+        <strong>ネイティブ HTML を最優先する。</strong>
+        ブラウザがすでに持つ名前・役割・キーボード操作を活かし、不要な ARIA や独自スクリプトを増やしません。
+      </li>
+      <li>
+        <strong>検証可能な根拠を残す。</strong>
+        コントラスト比など数値で示せるものは推測せず、検証手段の出力を根拠にします。
+      </li>
+      <li>
+        <strong>自動チェックだけで適合を断定しない。</strong>
+        人手による確認が必要な範囲を分けて扱い、試験結果を公開する姿勢を取ります。
+      </li>
+      <li>
+        <strong>判断をドキュメントに残す。</strong>
+        「なぜそうしたか」を説明できる状態を、成果物の一部として扱います。
+      </li>
+    </ul>
+
+    <h2>なぜネイティブ HTML を優先するか</h2>
+    <p>
+      <code>&lt;button&gt;</code>、<code>&lt;details&gt;</code>、<code>&lt;dialog&gt;</code>、<code>&lt;nav&gt;</code>
+      など、標準要素は支援技術との接続をブラウザ側が担います。
+      見た目だけを自作コンポーネントで揃えるより、まず標準で足りるかを検討した方が、壊れにくく説明しやすい実装になります。
+    </p>
+    <p class="callout">
+      ARIA を足す場合は、「なぜネイティブでは不可能か」をコメントや設計判断として残します。
+      足りるものに役割を重ねないことが、長期的な保守にも効きます。
+    </p>
+
+    <h2>このサイトについて</h2>
+    <p>
+      本サイトは採用面接用のポートフォリオです。実在の企業・サービス・所在地を示すものではありません。
+      実装の正しさと同等に、「なぜそうしたかを説明できること」を成果物の価値としています。
+    </p>
+    <p>
+      準拠基準や試験の考え方は
+      <a href="/accessibility/">アクセシビリティ方針</a>
+      に、よくいただく質問は
+      <a href="/faq/">よくある質問</a>
+      にまとめています。
+    </p>
+
+    <h2>ご意見・ご指摘</h2>
+    <p>
+      アクセシビリティに関するフィードバックは
+      <a href="mailto:accessibility@example.com">accessibility@example.com</a>
+      までお寄せください。できる限り改善に努めます。
+    </p>
+
+    <p class="about__cta">
+      <a class="button" href="/services/">サービスを見る</a>
+      <a class="button button--ghost" href="/accessibility/">アクセシビリティ方針を読む</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: var(--measure);
+  }
+
+  .about .callout strong,
+  .about li strong {
+    font-weight: 700;
+  }
+
+  .about code {
+    font-size: 0.95em;
+    padding: 0.1em 0.35em;
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-12);
+    max-width: none;
+  }
+</style>
