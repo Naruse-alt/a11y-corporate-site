@@ -24,6 +24,9 @@
   --color-primary: #0b57a4;
   --color-primary-strong: #084a8c; /* ホバー等の強調 */
   --color-on-primary: #ffffff;
+  /* フォーム状態。色だけで伝えない（テキスト・アイコン併用）。比は contrast.mjs で検証 */
+  --color-danger: #a11a0e;
+  --color-success: #0d6b3a;
 
   /* フォーカスリング: 明色 + 暗色の二重アウトライン (2.4.7 A)。 */
   --color-focus-inner: #ffffff;
@@ -90,6 +93,8 @@
   --color-primary: #7fbaf5;
   --color-primary-strong: #a6cefb;
   --color-on-primary: #0a0f14;
+  --color-danger: #ffb4a8;
+  --color-success: #7ddea8;
   --color-focus-inner: #0a0f14;
   --color-focus-outer: #bcd8f7;
 
@@ -111,6 +116,8 @@
     --color-primary: #7fbaf5;
     --color-primary-strong: #a6cefb;
     --color-on-primary: #0a0f14;
+    --color-danger: #ffb4a8;
+    --color-success: #7ddea8;
     --color-focus-inner: #0a0f14;
     --color-focus-outer: #bcd8f7;
 

@@ -1,0 +1,299 @@
+---
+/*
+ * お問い合わせデモフォーム。
+ *
+ * なぜネイティブ form か:
+ *   label/input/select/textarea/button で名前・役割・キーボード操作を賄える。
+ *   送信は行わず、クライアント検証と成功メッセージの見せ場とする。
+ *
+ * ARIA について:
+ *   - aria-invalid / aria-describedby はネイティブだけでは「どのエラーか」を
+ *     プログラム的に結びつけられないため付与する。
+ *   - aria-live はステータス領域1か所のみ（乱用しない）。
+ *   - 成功後は入力値を残す（3.3.7 冗長な入力 A）。
+ */
+const topics = [
+  { value: '', label: '選択してください' },
+  { value: 'audit', label: 'アクセシビリティ診断' },
+  { value: 'implementation', label: '設計・実装支援' },
+  { value: 'operations', label: '運用・教育' },
+  { value: 'other', label: 'その他' },
+] as const;
+---
+
+<form class="form" id="contact-form" method="post" action="/contact/" novalidate data-contact-form>
+  <p class="callout">
+    このフォームはポートフォリオ用の<strong>送信なしデモ</strong>です。
+    入力内容は外部に送られません。検証エラーと成功メッセージの振る舞いを確認できます。
+  </p>
+
+  {/*
+    ステータス領域。初期は空。
+    エラー時・成功時に内容を入れ、フォーカスを移す。
+    aria-live はスクリプトが必要時に付与する。
+  */}
+  <div
+    class="form__status"
+    id="contact-status"
+    tabindex="-1"
+    hidden
+    data-contact-status
+  ></div>
+
+  <div class="form__field">
+    <label class="form__label" for="contact-name">
+      お名前
+      <span class="form__required">（必須）</span>
+    </label>
+    <input
+      class="form__control"
+      id="contact-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+      aria-describedby="contact-name-error"
+      data-field="name"
+    />
+    <p class="form__error" id="contact-name-error" hidden data-error-for="name"></p>
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="contact-email">
+      メールアドレス
+      <span class="form__required">（必須）</span>
+    </label>
+    <p class="form__hint" id="contact-email-hint">例: name@example.com</p>
+    <input
+      class="form__control"
+      id="contact-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      required
+      aria-describedby="contact-email-hint contact-email-error"
+      data-field="email"
+    />
+    <p class="form__error" id="contact-email-error" hidden data-error-for="email"></p>
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="contact-org">
+      会社名・組織名
+      <span class="form__optional">（任意）</span>
+    </label>
+    <input
+      class="form__control"
+      id="contact-org"
+      name="organization"
+      type="text"
+      autocomplete="organization"
+      data-field="organization"
+    />
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="contact-topic">
+      お問い合わせ種別
+      <span class="form__required">（必須）</span>
+    </label>
+    <select
+      class="form__control"
+      id="contact-topic"
+      name="topic"
+      required
+      aria-describedby="contact-topic-error"
+      data-field="topic"
+    >
+      {topics.map((topic) => <option value={topic.value}>{topic.label}</option>)}
+    </select>
+    <p class="form__error" id="contact-topic-error" hidden data-error-for="topic"></p>
+  </div>
+
+  <div class="form__field">
+    <label class="form__label" for="contact-message">
+      お問い合わせ内容
+      <span class="form__required">（必須）</span>
+    </label>
+    <p class="form__hint" id="contact-message-hint">具体的な状況やご希望を記入してください（10文字以上）。</p>
+    <textarea
+      class="form__control"
+      id="contact-message"
+      name="message"
+      rows="6"
+      required
+      aria-describedby="contact-message-hint contact-message-error"
+      data-field="message"
+    ></textarea>
+    <p class="form__error" id="contact-message-error" hidden data-error-for="message"></p>
+  </div>
+
+  <p class="form__actions">
+    <button class="button" type="submit">入力内容を確認する（デモ）</button>
+  </p>
+</form>
+
+<script>
+  // クライアント検証デモ。送信は行わない。
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const statusEl = document.querySelector<HTMLElement>('[data-contact-status]');
+  if (!form || !statusEl) {
+    // フォームが無いページでは何もしない
+  } else {
+    type FieldName = 'name' | 'email' | 'topic' | 'message';
+
+    interface FieldError {
+      field: FieldName;
+      message: string;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const fieldEls: Record<FieldName, HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = {
+      name: form.querySelector('[data-field="name"]') as HTMLInputElement,
+      email: form.querySelector('[data-field="email"]') as HTMLInputElement,
+      topic: form.querySelector('[data-field="topic"]') as HTMLSelectElement,
+      message: form.querySelector('[data-field="message"]') as HTMLTextAreaElement,
+    };
+
+    const errorEls: Record<FieldName, HTMLElement> = {
+      name: form.querySelector('[data-error-for="name"]') as HTMLElement,
+      email: form.querySelector('[data-error-for="email"]') as HTMLElement,
+      topic: form.querySelector('[data-error-for="topic"]') as HTMLElement,
+      message: form.querySelector('[data-error-for="message"]') as HTMLElement,
+    };
+
+    const clearErrors = (): void => {
+      (Object.keys(fieldEls) as FieldName[]).forEach((key) => {
+        fieldEls[key].removeAttribute('aria-invalid');
+        errorEls[key].hidden = true;
+        errorEls[key].textContent = '';
+      });
+    };
+
+    const showFieldError = (field: FieldName, message: string): void => {
+      fieldEls[field].setAttribute('aria-invalid', 'true');
+      errorEls[field].hidden = false;
+      errorEls[field].textContent = message;
+    };
+
+    const validate = (): FieldError[] => {
+      const errors: FieldError[] = [];
+      const name = fieldEls.name.value.trim();
+      const email = fieldEls.email.value.trim();
+      const topic = fieldEls.topic.value;
+      const message = fieldEls.message.value.trim();
+
+      if (!name) {
+        errors.push({
+          field: 'name',
+          message: 'お名前を入力してください。空欄のままでは送信できません。',
+        });
+      }
+
+      if (!email) {
+        errors.push({
+          field: 'email',
+          message: 'メールアドレスを入力してください。例: name@example.com',
+        });
+      } else if (!emailPattern.test(email)) {
+        errors.push({
+          field: 'email',
+          message: 'メールアドレスの形式が正しくありません。「名前@ドメイン」の形で入力してください。',
+        });
+      }
+
+      if (!topic) {
+        errors.push({
+          field: 'topic',
+          message: 'お問い合わせ種別を一覧から選んでください。',
+        });
+      }
+
+      if (!message) {
+        errors.push({
+          field: 'message',
+          message: 'お問い合わせ内容を入力してください。',
+        });
+      } else if (message.length < 10) {
+        errors.push({
+          field: 'message',
+          message: '内容が短すぎます。10文字以上で、具体的な状況やご希望を書いてください。',
+        });
+      }
+
+      return errors;
+    };
+
+    const showErrorStatus = (errors: FieldError[]): void => {
+      const items = errors
+        .map((err) => {
+          const id = fieldEls[err.field].id;
+          return `<li><a href="#${id}">${escapeHtml(labelFor(err.field))}: ${escapeHtml(err.message)}</a></li>`;
+        })
+        .join('');
+
+      statusEl.hidden = false;
+      statusEl.className = 'form__status form__status--error';
+      // 件数通知用。フォーカスは先頭エラー項目へ移す (forms.mdc)
+      statusEl.setAttribute('aria-live', 'assertive');
+      statusEl.innerHTML = `
+        <p class="form__status-title" id="contact-status-title">入力内容を修正してください</p>
+        <p>${errors.length}件のエラーがあります。リンク先の項目を修正してください。</p>
+        <ul class="form__status-list">${items}</ul>
+      `;
+      statusEl.setAttribute('aria-labelledby', 'contact-status-title');
+      fieldEls[errors[0].field].focus();
+    };
+
+    const showSuccessStatus = (): void => {
+      statusEl.hidden = false;
+      statusEl.className = 'form__status form__status--success';
+      statusEl.setAttribute('aria-live', 'polite');
+      statusEl.innerHTML = `
+        <p class="form__status-title" id="contact-status-title">デモ送信が完了しました</p>
+        <p>
+          入力内容の検証は問題ありませんでした。このデモでは外部への送信は行っていません。
+          入力内容はそのまま残してあります（再入力の必要はありません）。
+        </p>
+      `;
+      statusEl.setAttribute('aria-labelledby', 'contact-status-title');
+      statusEl.focus();
+    };
+
+    const labelFor = (field: FieldName): string => {
+      switch (field) {
+        case 'name':
+          return 'お名前';
+        case 'email':
+          return 'メールアドレス';
+        case 'topic':
+          return 'お問い合わせ種別';
+        case 'message':
+          return 'お問い合わせ内容';
+      }
+    };
+
+    const escapeHtml = (value: string): string =>
+      value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      clearErrors();
+
+      const errors = validate();
+      if (errors.length > 0) {
+        errors.forEach((err) => showFieldError(err.field, err.message));
+        showErrorStatus(errors);
+        // ステータスへフォーカスしたうえで、続けて先頭エラーにも到達できるよう一覧リンクを用意
+        return;
+      }
+
+      showSuccessStatus();
+    });
+  }
+</script>
