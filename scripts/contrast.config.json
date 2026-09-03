@@ -10,7 +10,12 @@
     { "name": "リンク / 面", "fg": "--color-link", "bg": "--color-surface", "level": "AA" },
     { "name": "ボタン文字 / プライマリ", "fg": "--color-on-primary", "bg": "--color-primary", "level": "AA" },
     { "name": "ボタン文字 / プライマリ強調", "fg": "--color-on-primary", "bg": "--color-primary-strong", "level": "AA" },
-    { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" }
+    { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" },
+    { "name": "エラーテキスト / 背景", "fg": "--color-danger", "bg": "--color-bg", "level": "AA" },
+    { "name": "エラーテキスト / 面", "fg": "--color-danger", "bg": "--color-surface", "level": "AA" },
+    { "name": "成功テキスト / 背景", "fg": "--color-success", "bg": "--color-bg", "level": "AA" },
+    { "name": "成功テキスト / 面", "fg": "--color-success", "bg": "--color-surface", "level": "AA" },
+    { "name": "エラー境界 / 背景", "fg": "--color-danger", "bg": "--color-bg", "level": "UI" }
   ],
   "dark": [
     { "name": "本文テキスト / 背景", "fg": "--color-text", "bg": "--color-bg", "level": "AA" },
@@ -23,6 +28,11 @@
     { "name": "リンク / 面", "fg": "--color-link", "bg": "--color-surface", "level": "AA" },
     { "name": "ボタン文字 / プライマリ", "fg": "--color-on-primary", "bg": "--color-primary", "level": "AA" },
     { "name": "ボタン文字 / プライマリ強調", "fg": "--color-on-primary", "bg": "--color-primary-strong", "level": "AA" },
-    { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" }
+    { "name": "境界線 / 背景", "fg": "--color-border", "bg": "--color-bg", "level": "UI" },
+    { "name": "エラーテキスト / 背景", "fg": "--color-danger", "bg": "--color-bg", "level": "AA" },
+    { "name": "エラーテキスト / 面", "fg": "--color-danger", "bg": "--color-surface", "level": "AA" },
+    { "name": "成功テキスト / 背景", "fg": "--color-success", "bg": "--color-bg", "level": "AA" },
+    { "name": "成功テキスト / 面", "fg": "--color-success", "bg": "--color-surface", "level": "AA" },
+    { "name": "エラー境界 / 背景", "fg": "--color-danger", "bg": "--color-bg", "level": "UI" }
   ]
 }

@@ -317,6 +317,149 @@ body.is-drawer-open {
   margin-block-start: var(--space-2);
 }
 
+/* --- フォーム --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--measure);
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form__label {
+  font-weight: 700;
+}
+
+.form__required {
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.form__optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.form__hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.form__control {
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+  line-height: var(--line-height-base);
+}
+
+textarea.form__control {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.form__control:hover {
+  border-color: var(--color-primary);
+}
+
+.form__control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.form__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.form__error[hidden],
+.form__status[hidden] {
+  display: none;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+/*
+ * フォーム全体の通知。
+ * フォーカス可能な見出しとして使い、送信後にフォーカスを移す (3.3.1)。
+ * aria-live はスクリプト側で必要時のみ付与し、乱用しない。
+ */
+.form__status {
+  margin: 0;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius);
+  border-inline-start: 4px solid var(--color-border);
+  background-color: var(--color-surface-2);
+}
+
+.form__status:focus {
+  outline: 2px solid var(--color-focus-outer);
+  outline-offset: 2px;
+}
+
+.form__status--error {
+  border-inline-start-color: var(--color-danger);
+  color: var(--color-text);
+}
+
+.form__status--error .form__status-title {
+  color: var(--color-danger);
+}
+
+.form__status--success {
+  border-inline-start-color: var(--color-success);
+}
+
+.form__status--success .form__status-title {
+  color: var(--color-success);
+}
+
+.form__status-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.form__status-list {
+  margin: 0;
+  padding-inline-start: 1.25em;
+}
+
+.form__status-list a {
+  color: var(--color-link);
+}
+
+@media (forced-colors: active) {
+  .form__control {
+    border-color: ButtonText;
+  }
+
+  .form__control[aria-invalid='true'] {
+    border-color: Highlight;
+  }
+
+  .form__status {
+    border: 1px solid CanvasText;
+    border-inline-start-width: 4px;
+  }
+}
+
 /* prefers-reduced-motion: 動きを減らす */
 @media (prefers-reduced-motion: reduce) {
   *,
