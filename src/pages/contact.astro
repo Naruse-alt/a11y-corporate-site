@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/form/ContactForm.astro';
+
+/*
+ * お問い合わせページ（送信なしデモ）。
+ * 見せ場はフォームのラベル関連付け・必須の明示・エラー特定／修正提案・成功通知。
+ */
+---
+
+<BaseLayout
+  title="お問い合わせ"
+  description="Inclusive Works へのお問い合わせ（デモ）。送信は行わず、入力検証と成功メッセージの振る舞いを確認できます。"
+>
+  <article class="contact-page">
+    <header class="contact-page__intro">
+      <p class="eyebrow">Contact</p>
+      <h1>お問い合わせ</h1>
+      <p class="lead">
+        サービスやアクセシビリティ方針についてのご質問を想定したデモフォームです。
+        実送信は行いません。検証エラーと成功時の通知を確認できます。
+      </p>
+    </header>
+
+    <ContactForm />
+
+    <section class="section contact-page__alt" aria-labelledby="contact-alt-heading">
+      <h2 id="contact-alt-heading">メールでの連絡</h2>
+      <p>
+        デモ以外の経路として、フィードバックは
+        <a href="mailto:accessibility@example.com">accessibility@example.com</a>
+        でも受け付けます（架空のアドレスです）。
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .contact-page {
+    max-width: var(--measure);
+  }
+
+  .contact-page__intro {
+    margin-block-end: var(--space-8);
+  }
+
+  .contact-page__intro h1 {
+    font-size: var(--text-3xl);
+  }
+</style>
