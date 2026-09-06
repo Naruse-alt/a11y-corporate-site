@@ -33,6 +33,7 @@ export const footerNavItems: readonly NavItem[] = [
   { href: '/about/', label: '会社概要' },
   { href: '/accessibility/', label: 'アクセシビリティ方針' },
   { href: '/faq/', label: 'よくある質問' },
+  { href: '/contact/', label: 'お問い合わせ' },
 ] as const;
 
 /**
