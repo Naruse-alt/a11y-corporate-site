@@ -7,21 +7,45 @@ import { services } from '../data/services';
   title="ホーム"
   description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
 >
-  <section class="hero">
-    {/* 装飾。情報を持たないため aria-hidden。forced-colors では自然に無効化される。 */}
+  <section class="hero" aria-labelledby="hero-heading">
+    {/* 装飾。情報を持たないため aria-hidden。 */}
     <span class="hero__decoration" aria-hidden="true"></span>
 
-    <div class="hero__body">
-      <p class="eyebrow">Web アクセシビリティ</p>
-      <h1>誰も取り残さない Web を、標準の力で。</h1>
-      <p class="lead">
-        Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
-        WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
-      </p>
-      <p class="hero__actions">
-        <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
-        <a class="button button--ghost" href="/services/">提供サービスを見る</a>
-      </p>
+    <div class="hero__grid">
+      <div class="hero__body">
+        <p class="eyebrow">Web アクセシビリティ</p>
+        <h1 id="hero-heading">誰も取り残さない Web を、標準の力で。</h1>
+        <p class="lead">
+          Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
+          WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+        </p>
+        <p class="hero__actions">
+          <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
+          <a class="button button--ghost" href="/services/">提供サービスを見る</a>
+        </p>
+      </div>
+
+      {/*
+        右カラムのイラスト。雰囲気を伝える補助なので、短い代替テキストに留める。
+        ページの主張は見出し・リードが担う（1.1.1）。
+      */}
+      <div class="hero__visual">
+        <picture>
+          <source
+            type="image/webp"
+            srcset="/images/hero-inclusive-web.webp"
+          />
+          <img
+            class="hero__image"
+            src="/images/hero-inclusive-web.png"
+            width="1200"
+            height="800"
+            alt="多様な人々がキーボードとブラウザ画面を囲み、アクセシブルな Web を協働して作るイラスト"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </picture>
+      </div>
     </div>
   </section>
 
@@ -78,21 +102,19 @@ import { services } from '../data/services';
   .hero {
     position: relative;
     margin-block-start: var(--space-4);
-    padding: clamp(var(--space-8), 5vw, var(--space-20)) clamp(var(--space-4), 4vw, var(--space-12));
-    /* プライマリ色をごく薄く敷いたパネル。色はトークン由来を color-mix で調整。 */
+    padding: clamp(var(--space-8), 5vw, var(--space-16)) clamp(var(--space-4), 4vw, var(--space-12));
     background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-bg));
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
 
-  /* 幾何学的な装飾。淡い同心円で奥行きを出す。 */
   .hero__decoration {
     position: absolute;
     inset-block-start: -6rem;
-    inset-inline-end: -6rem;
-    inline-size: 20rem;
-    block-size: 20rem;
+    inset-inline-end: -4rem;
+    inline-size: 18rem;
+    block-size: 18rem;
     border-radius: 50%;
     background: radial-gradient(
       circle at center,
@@ -102,9 +124,24 @@ import { services } from '../data/services';
     pointer-events: none;
   }
 
-  .hero__body {
+  /* 二分割。DOM 順は本文→ビジュアル。広い画面では左右、狭幅では縦積み (1.4.10) */
+  .hero__grid {
     position: relative;
-    max-width: 46rem;
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 48rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .hero__body {
+    max-width: 36rem;
   }
 
   .hero h1 {
@@ -119,7 +156,39 @@ import { services } from '../data/services';
     max-width: none;
   }
 
-  /* カード見出しリンク。下線でリンクだと分かるようにする (1.4.1) */
+  .hero__visual {
+    justify-self: center;
+    inline-size: min(100%, 34rem);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* わずかな浮遊。情報伝達ではなく存在感のため。reduced-motion で停止 */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__visual {
+      animation: hero-float 7s ease-in-out infinite;
+    }
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.4rem);
+    }
+  }
+
   .card__title-link {
     color: var(--color-text);
     text-decoration: underline;
@@ -132,5 +201,11 @@ import { services } from '../data/services';
 
   .services-more {
     margin-block-start: var(--space-8);
+  }
+
+  @media (forced-colors: active) {
+    .hero__visual {
+      border-color: CanvasText;
+    }
   }
 </style>
