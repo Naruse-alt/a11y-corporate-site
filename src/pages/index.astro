@@ -124,23 +124,25 @@ import { services } from '../data/services';
     pointer-events: none;
   }
 
-  /* 二分割。DOM 順は本文→ビジュアル。広い画面では左右、狭幅では縦積み (1.4.10) */
+  /* 二分割。DOM 順は本文→ビジュアル。
+   * デスクトップ既定で横並びとし、狭い幅だけ縦積みにする。
+   * （min-width: 48rem だと OS 拡大／ブラウザズームで PC でも縦積みになりやすい） */
   .hero__grid {
     position: relative;
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-6) var(--space-8);
     align-items: center;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   }
 
-  @media (min-width: 48rem) {
+  @media (max-width: 40rem) {
     .hero__grid {
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-      gap: var(--space-8);
+      grid-template-columns: 1fr;
     }
   }
 
   .hero__body {
+    min-width: 0;
     max-width: 36rem;
   }
 
@@ -157,13 +159,22 @@ import { services } from '../data/services';
   }
 
   .hero__visual {
-    justify-self: center;
-    inline-size: min(100%, 34rem);
+    min-width: 0;
+    justify-self: stretch;
+    inline-size: 100%;
+    max-inline-size: 32rem;
     border-radius: var(--radius-lg);
     background-color: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
+  }
+
+  @media (max-width: 40rem) {
+    .hero__visual {
+      justify-self: center;
+      max-inline-size: min(100%, 28rem);
+    }
   }
 
   .hero__image {
