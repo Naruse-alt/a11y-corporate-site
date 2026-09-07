@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { annotationGroups } from '../data/annotations';
+
+/*
+ * 実装解説ハブ（ポートフォリオ用メタページ）。
+ * コーポレート本体とは分離し、「なぜそうしたか」をページ／パーツ単位で示す。
+ * 適合の断定や、スクリーンリーダーでの「確認しました」報告は書かない。
+ */
+---
+
+<BaseLayout
+  title="実装の解説"
+  description="Inclusive Works ポートフォリオにおけるアクセシビリティ実装の解説。各ページ・パーツで何に注意したかをまとめます。"
+>
+  <article class="annotations prose">
+    <p class="eyebrow">Annotations</p>
+    <h1>実装の解説</h1>
+
+    <p class="lead">
+      本サイトは架空企業のコーポレートサイトであり、同時に Web アクセシビリティ実装のポートフォリオです。
+      ここでは「見た目の正しさ」だけでなく、<strong>なぜその実装にしたか</strong>をページ／パーツ単位で示します。
+    </p>
+
+    <p class="callout">
+      これは適合宣言ページではありません。達成基準番号は「意識した観点」の整理であり、
+      自動チェック結果だけでレベル AA 達成とは判断しません。スクリーンリーダー等の最終確認は人間が行います。
+    </p>
+
+    <nav class="annotations-toc" aria-label="解説の目次">
+      <h2 class="annotations-toc__heading">目次</h2>
+      <ol>
+        {
+          annotationGroups.map((group) => (
+            <li>
+              <a href={`#${group.id}`}>{group.heading}</a>
+              <ol>
+                {group.items.map((item) => (
+                  <li>
+                    <a href={`#${item.id}`}>{item.title}</a>
+                  </li>
+                ))}
+              </ol>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    {
+      annotationGroups.map((group) => (
+        <section class="annotations-group" id={group.id} aria-labelledby={`${group.id}-heading`}>
+          <h2 id={`${group.id}-heading`}>{group.heading}</h2>
+
+          {group.items.map((item) => (
+            <section class="annotation-item" id={item.id} aria-labelledby={`${item.id}-heading`}>
+              <h3 id={`${item.id}-heading`}>{item.title}</h3>
+              <p>{item.summary}</p>
+
+              <h4 class="annotation-item__sub">対応を意識した達成基準</h4>
+              <ul>
+                {item.criteria.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ul>
+
+              <h4 class="annotation-item__sub">やらなかったこと</h4>
+              <p>{item.avoided}</p>
+
+              {item.demoHref && item.demoLabel && (
+                <p>
+                  <a href={item.demoHref}>{item.demoLabel}</a>
+                </p>
+              )}
+            </section>
+          ))}
+        </section>
+      ))
+    }
+
+    <section class="annotations-closing" aria-labelledby="annotations-next-heading">
+      <h2 id="annotations-next-heading">関連ページ</h2>
+      <p>
+        方針の文言や試験の考え方は
+        <a href="/accessibility/">アクセシビリティ方針</a>
+        を、設計判断の時系列はリポジトリ内の
+        <code>docs/decisions.md</code>
+        も参照してください。
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .annotations {
+    max-width: var(--measure);
+  }
+
+  .annotations-toc {
+    margin-block: var(--space-8);
+    padding: var(--space-4) var(--space-6);
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius);
+    border-inline-start: 4px solid var(--color-primary);
+  }
+
+  .annotations-toc__heading {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-sm);
+    letter-spacing: 0.06em;
+  }
+
+  .annotations-toc ol {
+    margin: 0;
+    padding-inline-start: 1.25em;
+  }
+
+  .annotations-toc li + li {
+    margin-block-start: var(--space-2);
+  }
+
+  .annotations-toc > ol > li > ol {
+    margin-block-start: var(--space-2);
+  }
+
+  .annotation-item {
+    margin-block-start: var(--space-8);
+    padding-block-end: var(--space-6);
+    border-block-end: 1px solid var(--color-border-subtle);
+  }
+
+  .annotation-item:last-child {
+    border-block-end: none;
+  }
+
+  .annotation-item__sub {
+    margin-block-start: var(--space-4);
+    margin-block-end: var(--space-2);
+    font-size: var(--text-base);
+  }
+
+  .annotations-group,
+  .annotation-item,
+  .annotations-toc {
+    scroll-margin-top: 5rem;
+  }
+
+  .annotations code {
+    font-size: 0.95em;
+    padding: 0.1em 0.35em;
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (forced-colors: active) {
+    .annotations-toc,
+    .annotation-item {
+      border-color: CanvasText;
+    }
+  }
+</style>

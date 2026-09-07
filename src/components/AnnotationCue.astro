@@ -1,0 +1,49 @@
+---
+/*
+ * 各ページ末尾から実装解説へ誘導する短い導線。
+ * コーポレート UI 本体に長い注釈を埋め込まないための分離。
+ */
+interface Props {
+  /** 解説ページ内のアンカー（例: faq）。省略時はハブ先頭へ */
+  readonly topicId?: string;
+}
+const { topicId } = Astro.props;
+const href = topicId ? `/annotations/#${topicId}` : '/annotations/';
+---
+
+<aside class="annotation-cue" aria-labelledby="annotation-cue-heading">
+  <h2 id="annotation-cue-heading" class="annotation-cue__heading">このページの実装ポイント</h2>
+  <p>
+    ポートフォリオとして、この周辺で意識したアクセシビリティ上の判断を
+    <a href={href}>実装の解説</a>
+    にまとめています。
+  </p>
+</aside>
+
+<style>
+  .annotation-cue {
+    margin-block-start: var(--space-16);
+    padding: var(--space-4) var(--space-6);
+    background-color: var(--color-surface-2);
+    border-inline-start: 4px solid var(--color-primary);
+    border-radius: var(--radius);
+    max-width: var(--measure);
+  }
+
+  .annotation-cue__heading {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-base);
+  }
+
+  .annotation-cue p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (forced-colors: active) {
+    .annotation-cue {
+      border: 1px solid CanvasText;
+      border-inline-start-width: 4px;
+    }
+  }
+</style>
