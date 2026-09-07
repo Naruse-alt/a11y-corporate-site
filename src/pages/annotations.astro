@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { annotationGroups } from '../data/annotations';
+import { getCriterion } from '../data/criteria';
 
 /*
  * 実装解説ハブ（ポートフォリオ用メタページ）。
  * コーポレート本体とは分離し、「なぜそうしたか」をページ／パーツ単位で示す。
  * 適合の断定や、スクリーンリーダーでの「確認しました」報告は書かない。
+ * 達成基準は WAIC Understanding（外部）へリンクする。同一タブで開き、リンク先＝適合とは書かない。
  */
 ---
 
@@ -25,6 +27,9 @@ import { annotationGroups } from '../data/annotations';
     <p class="callout">
       これは適合宣言ページではありません。達成基準番号は「意識した観点」の整理であり、
       自動チェック結果だけでレベル AA 達成とは判断しません。スクリーンリーダー等の最終確認は人間が行います。
+      各達成基準名は
+      <a href="https://waic.jp/translations/WCAG22/Understanding/">WAIC の WCAG 2.2 Understanding（日本語訳）</a>
+      へのリンクです。解説の参照先であり、リンク先を開いたこと自体が適合を意味しません。
     </p>
 
     <nav class="annotations-toc" aria-label="解説の目次">
@@ -59,9 +64,16 @@ import { annotationGroups } from '../data/annotations';
 
               <h4 class="annotation-item__sub">対応を意識した達成基準</h4>
               <ul>
-                {item.criteria.map((c) => (
-                  <li>{c}</li>
-                ))}
+                {item.criteria.map((id) => {
+                  const c = getCriterion(id);
+                  return (
+                    <li>
+                      <a href={c.href} rel="noopener noreferrer">
+                        {c.label}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
 
               <h4 class="annotation-item__sub">やらなかったこと</h4>
