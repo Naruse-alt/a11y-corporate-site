@@ -15,6 +15,7 @@
     "contrast": "node scripts/contrast.mjs"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-sans-jp": "^5.3.0",
     "astro": "^7.2.9"
   },
   "devDependencies": {
