@@ -34,6 +34,7 @@ export const footerNavItems: readonly NavItem[] = [
   { href: '/accessibility/', label: 'アクセシビリティ方針' },
   { href: '/faq/', label: 'よくある質問' },
   { href: '/contact/', label: 'お問い合わせ' },
+  { href: '/annotations/', label: '実装の解説' },
 ] as const;
 
 /**
