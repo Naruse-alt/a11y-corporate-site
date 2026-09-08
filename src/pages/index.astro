@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AnnotationCue from '../components/AnnotationCue.astro';
 import { services } from '../data/services';
 ---
 
@@ -96,6 +97,8 @@ import { services } from '../data/services';
       <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
     </p>
   </section>
+
+  <AnnotationCue topicId="home-hero" />
 </BaseLayout>
 
 <style>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AnnotationCue from '../components/AnnotationCue.astro';
 
 /*
  * 会社概要ページ。
@@ -93,6 +94,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <a class="button" href="/services/">サービスを見る</a>
       <a class="button button--ghost" href="/accessibility/">アクセシビリティ方針を読む</a>
     </p>
+
+    <AnnotationCue topicId="about-policy" />
   </article>
 </BaseLayout>
 

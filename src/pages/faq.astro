@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AnnotationCue from '../components/AnnotationCue.astro';
 
 /*
  * FAQ ページ（見せ場 #1）。
@@ -168,6 +169,8 @@ const categories: readonly FaqCategory[] = [
     <p class="faq-page__cta">
       <a class="button button--ghost" href="/accessibility/">アクセシビリティ方針を読む</a>
     </p>
+
+    <AnnotationCue topicId="faq" />
   </article>
 </BaseLayout>
 
