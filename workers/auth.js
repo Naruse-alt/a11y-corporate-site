@@ -1,5 +1,5 @@
 /**
- * HTTP Basic 認証の判定ロジック（Pages Functions / Node テスト共用）。
+ * HTTP Basic 認証の判定ロジック（Workers / Node テスト共用）。
  * 資格情報は環境変数経由のみ。リポジトリに値を置かない。
  */
 

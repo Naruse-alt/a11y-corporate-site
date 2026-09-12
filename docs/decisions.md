@@ -4,9 +4,21 @@
 
 ---
 
+## 2026-09-12 / Cloudflare Workers（新UI）向けに Basic 認証を移行
+
+- **判断内容**：ダッシュボードの「Set up your application」が Workers Builds（Build + Deploy command）であるため、Pages Functions（`functions/_middleware.js`）から Workers + Static Assets（`workers/basic-auth.js` + `wrangler.jsonc`）へ移行する。`assets.run_worker_first = true` で静的ファイルの直出しを防ぎ、認証後に `env.ASSETS.fetch` する。
+- **対応する達成基準**：運用判断（限定共有の継続）。UI 達成基準の変更ではない。
+- **選定理由**：
+  - ユーザーが実際に開いているセットアップ画面が Workers 系であり、`npx wrangler deploy` が前提。
+  - 静的 Astro（アダプタなし）のまま、`wrangler.jsonc` の `assets.directory: ./dist` で配信できる。
+  - Secret 未設定時 Fail closed・同一の `BASIC_USER` / `BASIC_PASS` を維持できる。
+- **検討した代替案と却下理由**：
+  - 旧 Pages UI（Build output directory のみ）へ戻す → 現UIでは案内しにくく、公式も Workers 推奨のため見送り。
+  - `@astrojs/cloudflare` アダプタ導入 → 今回は SSR 不要で過剰。
+
 ## 2026-09-08 / Cloudflare Pages ＋ HTTP Basic 認証による限定共有
 
-- **判断内容**：一般公開の本番は置かず、Cloudflare Pages（`main`）を限定共有用の単一デプロイ先とする。サイト全体を Pages Functions（`functions/_middleware.js`）の HTTP Basic 認証で保護する。資格情報は Pages の Secret（`BASIC_USER` / `BASIC_PASS`）のみに置き、リポジトリには書かない。Secret 未設定時は Fail closed（401）。
+- **判断内容**：一般公開の本番は置かず、Cloudflare（当初 Pages想定、のち Workers 新UIへ移行）を限定共有用の単一デプロイ先とする。サイト全体を HTTP Basic 認証で保護する。資格情報は Secret（`BASIC_USER` / `BASIC_PASS`）のみに置き、リポジトリには書かない。Secret 未設定時は Fail closed（401）。
 - **対応する達成基準**：直接の UI 達成基準というより運用判断。公開範囲の制御により、未完成・架空コンテンツの誤認リスクを下げる。
 - **選定理由**：
   - 仮コーポレート／ポートフォリオであり、検索・偶然の訪問者への無防備公開は不要。
@@ -15,8 +27,8 @@
 - **検討した代替案と却下理由**：
   - Cloudflare Access → 管理は強いが、今回の「少数にパスワード共有」より重いため第2候補。
   - 一般公開本番 + 別ステージング → 仮サイト段階では過剰。
-  - 認証なしの `*.pages.dev` 公開 → 意図しない閲覧・誤解を招くため却下。
-- **運用上の注意**：HTTPS 前提。Basic 認証は覗き見防止程度であり機密は載せない。Pages Functions はダッシュボードで Fail closed を有効化する。
+  - 認証なしの公開 URL → 意図しない閲覧・誤解を招くため却下。
+- **運用上の注意**：HTTPS 前提。Basic 認証は覗き見防止程度であり機密は載せない。ダッシュボードの Access トグルは Basic と併用しない（OFF）。
 
 ## 2026-09-07 / 実装解説の達成基準を WAIC Understanding へリンク
 

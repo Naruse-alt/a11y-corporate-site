@@ -26,6 +26,7 @@ pnpm-debug.log*
 # deploy / adapter caches
 .vercel/
 .netlify/
+.wrangler/
 
 # test / coverage output
 coverage/

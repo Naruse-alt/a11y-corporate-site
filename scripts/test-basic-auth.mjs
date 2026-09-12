@@ -4,7 +4,7 @@
  */
 
 import assert from 'node:assert/strict';
-import { verifyBasicAuth } from '../functions/auth.js';
+import { verifyBasicAuth } from '../workers/auth.js';
 
 const user = 'reviewer';
 const pass = 'correct-horse';

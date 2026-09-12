@@ -1,24 +1,25 @@
 /**
- * Cloudflare Pages Functions: サイト全体を HTTP Basic 認証で保護する。
+ * Cloudflare Workers: 静的アセット配信の前に HTTP Basic 認証を行う。
  *
  * 想定用途: 仮コーポレートサイトの限定共有（一般公開ではない）。
- * Secret（Pages ダッシュボード）:
+ * Secret（Workers / Pages ダッシュボード）:
  *   - BASIC_USER
  *   - BASIC_PASS
  *
- * Secret 未設定時は Fail closed（すべて 401）。ローカルの `astro dev` では
- * この Functions は動かないため、開発時は認証なしで閲覧できる。
+ * Secret 未設定時は Fail closed（すべて 401）。
+ * ローカルの `astro dev` ではこの Worker は動かないため、開発時は認証なしで閲覧できる。
  *
- * @see https://developers.cloudflare.com/pages/functions/middleware/
+ * wrangler.jsonc で assets.run_worker_first = true とし、静的ファイル直出しを防ぐ。
  */
 
 import { unauthorizedResponse, verifyBasicAuth } from './auth.js';
 
 /**
- * @param {EventContext<{ BASIC_USER?: string; BASIC_PASS?: string }, string, unknown>} context
+ * @param {Request} request
+ * @param {{ BASIC_USER?: string; BASIC_PASS?: string; ASSETS: { fetch: typeof fetch } }} env
+ * @returns {Promise<Response>}
  */
-export async function onRequest(context) {
-  const { request, env, next } = context;
+async function handleRequest(request, env) {
   const expectedUser = env.BASIC_USER;
   const expectedPass = env.BASIC_PASS;
 
@@ -39,7 +40,7 @@ export async function onRequest(context) {
     return unauthorizedResponse(401, 'Authentication required.');
   }
 
-  const response = await next();
+  const response = await env.ASSETS.fetch(request);
 
   // 認証済み応答が共有キャッシュに載らないようにする。
   const headers = new Headers(response.headers);
@@ -51,3 +52,13 @@ export async function onRequest(context) {
     headers,
   });
 }
+
+export default {
+  /**
+   * @param {Request} request
+   * @param {{ BASIC_USER?: string; BASIC_PASS?: string; ASSETS: { fetch: typeof fetch } }} env
+   */
+  async fetch(request, env) {
+    return handleRequest(request, env);
+  },
+};
