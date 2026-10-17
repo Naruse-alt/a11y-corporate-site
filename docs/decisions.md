@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-17 / GitHub Actions による CI（check / build / contrast）
+
+- **判断内容**：`.github/workflows/ci.yml` を追加し、`pull_request` と `main` への `push` で Node（`.nvmrc` = 22）上に `npm ci` したうえで `npm run check`・`npm run build`・`npm run contrast` を実行する。デプロイ／wrangler／シークレット依存は含めない。
+- **対応する達成基準**：運用判断。`contrast` は 1.4.3 コントラスト（最低限）AA／1.4.11 非テキストのコントラスト AA の回帰防止（数値根拠はスクリプト出力のみ）。
+- **選定理由**：
+  - 面接用ポートフォリオとして、PR 時点で型・ビルド・色トークンの破綻を止められると説明しやすい。
+  - `setup-node` の `node-version-file` + `cache: npm` でローカル（`.nvmrc`）と CI を揃え、依存解決も高速・再現可能にする。
+  - コントラストは AGENTS.md の「推測禁止」を CI でも強制する。
+- **検討した代替案と却下理由**：
+  - 単体テスト／E2E の同時追加 → 後続 PR に分離し、今回は品質ゲートの土台だけにする。
+  - CI 内で `wrangler deploy` → シークレットと本番影響があるため見送り。
+
 ## 2026-09-12 / Cloudflare Workers（新UI）向けに Basic 認証を移行
 
 - **判断内容**：ダッシュボードの「Set up your application」が Workers Builds（Build + Deploy command）であるため、Pages Functions（`functions/_middleware.js`）から Workers + Static Assets（`workers/basic-auth.js` + `wrangler.jsonc`）へ移行する。`assets.run_worker_first = true` で静的ファイルの直出しを防ぎ、認証後に `env.ASSETS.fetch` する。
