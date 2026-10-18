@@ -9,7 +9,7 @@
 - **判断内容**：`.github/workflows/ci.yml` を追加し、`pull_request` と `main` への `push` で Node（`.nvmrc` = 22）上に `npm ci` したうえで `npm run check`・`npm run build`・`npm run contrast` を実行する。デプロイ／wrangler／シークレット依存は含めない。
 - **対応する達成基準**：運用判断。`contrast` は 1.4.3 コントラスト（最低限）AA／1.4.11 非テキストのコントラスト AA の回帰防止（数値根拠はスクリプト出力のみ）。
 - **選定理由**：
-  - 面接用ポートフォリオとして、PR 時点で型・ビルド・色トークンの破綻を止められると説明しやすい。
+  - PR 時点で型・ビルド・色トークンの破綻を止める。
   - `setup-node` の `node-version-file` + `cache: npm` でローカル（`.nvmrc`）と CI を揃え、依存解決も高速・再現可能にする。
   - コントラストは AGENTS.md の「推測禁止」を CI でも強制する。
 - **検討した代替案と却下理由**：
