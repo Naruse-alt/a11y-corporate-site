@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-22 / npm audit による依存更新と開発サーバーの host 制限
+
+- **判断内容**：`npm audit fix`（`--force` なし）で lockfile 上の脆弱依存を更新し、`npm audit` を 0 件にした。`astro.config.mjs` の `server.host: true`（常時 0.0.0.0）をやめ、`ASTRO_HOST=0.0.0.0` のときだけ外部待ち受けにする。`process.env` 参照のため `@types/node` を devDependency に追加。
+- **対応する達成基準**：運用・サプライチェーン（UI 達成基準の変更ではない）。
+- **選定理由**：
+  - 報告されていた high / moderate は semver 範囲内の修正で解消できたため、メジャー強制や overrides は不要。
+  - `host: true` は Cloud Agent 向けに初期化時から入れていたが、ローカル既定で全インターフェース公開は過剰。必要な環境だけ環境変数で有効化する。
+  - Playwright の `webServer` は `--host 127.0.0.1` 指定のため、この変更の影響を受けない。
+- **検討した代替案と却下理由**：
+  - `npm audit fix --force` / メジャー更新 → 今回は不要だったため見送り。
+  - overrides で個別パッケージを固定 → lockfile 更新だけで足りたため見送り。
+
 ## 2026-10-22 / `.gitignore` で `.env*` / `.dev.vars*` をまとめて除外
 
 - **判断内容**：環境変数・ローカルシークレットの除外を個別列挙から `.env*` / `.dev.vars*` に広げ、テンプレ用に `!.env.example` / `!.dev.vars.example` を例外とする。
