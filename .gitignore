@@ -30,6 +30,10 @@ pnpm-debug.log*
 
 # test / coverage output
 coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
 
 # editor / OS files
 .DS_Store

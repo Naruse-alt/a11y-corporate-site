@@ -94,6 +94,28 @@ main a {
   outline-offset: 2px;
 }
 
+/*
+ * #main はスキップリンクのプログラム的フォーカス移動先（tabindex="-1"）であり、
+ * ボタンやリンクのような操作要素ではない。
+ * 上記の [tabindex] セレクタが当たると本文全体に二重リングが付き誤解を招くため、
+ * #main に限ってリングを出さない。
+ *
+ * なぜ outline を消してよいか:
+ *   2.4.7 フォーカスの可視化が求める可視フォーカスはインタラクティブ要素向け。
+ *   操作できない本文コンテナに枠線を付ける必要はなく、代替の可視表示も付けない。
+ *   a / button / input 等のセレクタ自体は変更しない。
+ */
+#main:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* マウス等で :focus-visible が付かない場合の UA / フォールバックリングも抑止する */
+#main:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
 /* ドロワー(<dialog>)展開中は背景のスクロールを止める */
 body.is-drawer-open {
   overflow: hidden;

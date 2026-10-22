@@ -58,7 +58,12 @@ const breadcrumbs: Crumb[] | null =
     <SkipLink />
     <SiteHeader path={path} />
 
-    <main id="main" class="container main-content">
+    {/*
+      スキップリンク先。href="#main" のページ内移動でフォーカスを受け取るには
+      フォーカス可能である必要がある（tabindex="-1"。正の値は使わない）。
+      2.4.1 ブロックスキップ A / 2.4.3 フォーカス順序 A
+    */}
+    <main id="main" class="container main-content" tabindex="-1">
       {breadcrumbs && <Breadcrumb items={breadcrumbs} />}
       <slot />
     </main>
