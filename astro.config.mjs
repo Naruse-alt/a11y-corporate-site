@@ -5,9 +5,9 @@ import { defineConfig } from 'astro/config';
 // 相対リンクの生成には影響しない。限定共有中も正しい絶対 URL が必要な機能（OG 等）のために更新する。
 export default defineConfig({
   site: 'https://example.com',
-  // Cloud Agent / CI 環境で外部からアクセスできるように 0.0.0.0 で待ち受ける
+  // 既定は localhost。Cloud Agent 等で外部から当てるときだけ ASTRO_HOST=0.0.0.0 を指定する。
   server: {
-    host: true,
+    host: process.env.ASTRO_HOST === '0.0.0.0',
     port: 4321,
   },
 });
