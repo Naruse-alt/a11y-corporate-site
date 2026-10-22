@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-10-22 / Dependabot（version updates）の導入
+
+- **判断内容**：`.github/dependabot.yml` で `npm` と `github-actions` を週次（Asia/Tokyo・月曜 09:00）に監視。npm は minor/patch をグループ化、major は個別。github-actions は一括グループ。コミット prefix は既存規約に合わせ `chore(deps)` / `ci(deps)`。
+- **対応する達成基準**：運用・供給チェーン（UI 達成基準の変更ではない）。
+- **選定理由**：PR 洪水を抑えつつ、lockfile／SHA ピン付き Actions を継続更新する。ci.yml の `uses: …@<sha> # vX.Y.Z` 形式は Dependabot が SHA とコメントを更新できる。
+- **検討した代替案と却下理由**：
+  - 日次更新 → PR が増えすぎるため見送り。
+  - npm も major をグループ化 → 破壊的変更のレビュー単位が粗くなるため個別のまま。
+
 ## 2026-10-22 / GitHub Actions CI の権限最小化とアクション固定
 
 - **判断内容**：`.github/workflows/ci.yml` に `permissions: contents: read` を追加。`actions/checkout` / `setup-node` / `cache` を Node 24 対応のメジャーへ上げ、タグではなくフルコミット SHA で固定（行末に `# vX.Y.Z`）。checkout に `persist-credentials: false`。`npm run test:basic-auth` を品質ゲートに追加（シークレット不要）。
