@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # .nvmrc（22）に合わせ、engines.node >=22 とローカル環境を揃える
+      # .nvmrc（24.22.1）に合わせ、engines.node >=24.22.1 とローカル環境を揃える
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
