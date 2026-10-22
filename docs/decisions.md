@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-22 / GitHub Actions CI の権限最小化とアクション固定
+
+- **判断内容**：`.github/workflows/ci.yml` に `permissions: contents: read` を追加。`actions/checkout` / `setup-node` / `cache` を Node 24 対応のメジャーへ上げ、タグではなくフルコミット SHA で固定（行末に `# vX.Y.Z`）。checkout に `persist-credentials: false`。`npm run test:basic-auth` を品質ゲートに追加（シークレット不要）。
+- **対応する達成基準**：運用・供給チェーン（UI 達成基準の変更ではない）。
+- **選定理由**：
+  - 既定の広い GITHUB_TOKEN 権限を絞り、アクション差し替えリスクを SHA ピンで下げる。
+  - v4 系は Node 20 ランタイムで非推奨警告が出るため、公式の Node 24 対応リリース（checkout v7.0.1 / setup-node v7.1.0 / cache v6.1.0）へ更新。
+  - Playwright の github reporter は workflow command の注釈であり、追加の `checks` / `pull-requests` 書き込み権限は不要と判断。
+- **検討した代替案と却下理由**：
+  - タグ参照のまま（`@v7`）→ 可変参照のため見送り。
+  - Dependabot 同時導入 → 次の PR に分離。
+
 ## 2026-10-22 / npm audit による依存更新と開発サーバーの host 制限
 
 - **判断内容**：`npm audit fix`（`--force` なし）で lockfile 上の脆弱依存を更新し、`npm audit` を 0 件にした。`astro.config.mjs` の `server.host: true`（常時 0.0.0.0）をやめ、`ASTRO_HOST=0.0.0.0` のときだけ外部待ち受けにする。`process.env` 参照のため `@types/node` を devDependency に追加。
