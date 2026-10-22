@@ -43,3 +43,18 @@ jobs:
       # 根拠: docs/decisions.md「コントラスト検証ツール scripts/contrast.mjs」
       - name: Contrast check
         run: npm run contrast
+
+      # Playwright のブラウザバイナリをキャッシュし、毎回のフルダウンロードを避ける
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      # Chromium のみ。OS 依存ライブラリ込みでインストールする
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # 直前の build 成果物を preview で配信し、a11y 回帰 E2E を実行する（Worker 認証は対象外）
+      - name: E2E accessibility
+        run: npx playwright test
