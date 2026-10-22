@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-22 / Node.js を 24.22.1 に固定（セキュリティリリース対応）
+
+- **判断内容**：`.nvmrc` を `24.22.1` に変更し、`package.json` / `package-lock.json` の `engines.node` を `>=24.22.1` に合わせる。CI は引き続き `node-version-file: .nvmrc`。Cloudflare Workers Builds も `.nvmrc` を拾う想定で、メジャーだけ（`22`）だと修正前パッチに留まりうる問題を避ける。
+- **対応する達成基準**：運用・サプライチェーン（UI 達成基準の変更ではない）。参照: [Node.js 2026-10-21 Security Releases](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)（22.x / 24.x / 26.x。24 系の修正版は v24.22.1、22 系は v22.23.4）。
+- **選定理由**：
+  - パッチまで `.nvmrc` に書くことで、CI・Workers Builds・ローカルが同じ修正版に揃う。
+  - ユーザー環境が既に v24.22.1 のため、現行 Active LTS の 24 系へ寄せる。
+  - 本番のリクエスト処理ランタイムは workerd（Workers）であり、Node バージョン変更の影響範囲は主にビルド／CI／ローカル開発に限られる。
+- **検討した代替案と却下理由**：
+  - `.nvmrc` を `22.23.4` に上げて 22 系に留める → セキュリティ修正は入るが、ローカル（24.22.1）とメジャーが食い違い、今後も 22 系の保守期限・イメージ追従を抱え続けるため見送り。
+  - `.nvmrc` を `24` のままメジャーのみ → 再び古いパッチが選ばれる余地があるため、今回はパッチ固定を選ぶ。
+
 ## 2026-10-18 / Playwright + axe による少数の a11y E2E
 
 - **判断内容**：`@playwright/test` と `@axe-core/playwright` で、壊れると困る挙動だけを E2E 化する。対象は (1) 全ページの axe（WCAG 2.x A/AA タグ）違反ゼロ (2) スキップリンクで `#main` へフォーカス (3) モバイルドロワーを Esc で閉じたときのトリガー復帰 (4) お問い合わせエラーの `aria-invalid` / `aria-describedby`。`astro preview` で静的成果物を検証し、Basic 認証 Worker は対象外。CI は Chromium のみ＋ブラウザキャッシュ。
