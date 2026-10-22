@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-22 / `.gitignore` で `.env*` / `.dev.vars*` をまとめて除外
+
+- **判断内容**：環境変数・ローカルシークレットの除外を個別列挙から `.env*` / `.dev.vars*` に広げ、テンプレ用に `!.env.example` / `!.dev.vars.example` を例外とする。
+- **対応する達成基準**：運用・シークレット漏洩防止（UI 達成基準の変更ではない）。
+- **選定理由**：`.env.development` や wrangler の `.dev.vars` が旧パターンから漏れていたため、網羅的なグロブで塞ぐ。
+- **検討した代替案と却下理由**：個別ファイル名の追加だけ → 今後も漏れやすいため見送り。
+
 ## 2026-10-22 / Node.js を 24.22.1 に固定（セキュリティリリース対応）
 
 - **判断内容**：`.nvmrc` を `24.22.1` に変更し、`package.json` / `package-lock.json` の `engines.node` を `>=24.22.1` に合わせる。CI は引き続き `node-version-file: .nvmrc`。Cloudflare Workers Builds も `.nvmrc` を拾う想定で、メジャーだけ（`22`）だと修正前パッチに留まりうる問題を避ける。
