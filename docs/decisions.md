@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-25 / wrangler.jsonc で preview_urls / workers_dev を明示
+
+- **判断内容**：`wrangler.jsonc` に `preview_urls: true` と `workers_dev: true` を明示する。
+- **対応する達成基準**：運用・設定の意図明示（UI 達成基準の変更ではない）。Issue #24。
+- **選定理由**：`preview_urls` を省略すると Wrangler は既存のダッシュボード設定を変えず、未設定時の初期値も `workers_dev` に依存する。PR レビュー用の Version / Preview URL をコードでオプトインし、ダッシュボードの暗黙状態に左右されないようにする。プレビューは公開到達可能だが、`run_worker_first: true` により本番と同じ Basic 認証・セキュリティヘッダー（`X-Robots-Tag: noindex` 含む）が付く。
+- **検討した代替案と却下理由**：`preview_urls: false` → PR プレビュー運用が壊れるため却下。ダッシュボードのみで管理 → 再デプロイで意図が上書きされうるため見送り。
+
 ## 2026-10-25 / セキュリティヘッダーと CSP（ハッシュ）
 
 - **判断内容**：CSP / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy / HSTS / X-Robots-Tag を `workers/basic-auth.js`（と `unauthorizedResponse`）で全レスポンスに付与。CSP は `unsafe-inline` なし。`dist/` のインライン script/style から SHA-256 を算出し `workers/csp-policy.generated.js` を生成。CI で生成結果とコミット差分を照合する。
