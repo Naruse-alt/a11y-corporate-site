@@ -6,7 +6,7 @@
 
 ## 2026-10-25 / Astro `site` を本番 workers.dev URL にする
 
-- **判断内容**：`astro.config.mjs` の `site` を `https://a11y-corporate-site.electricwarrior00.workers.dev` に更新する。
+- **判断内容**：`astro.config.mjs` の `site` を `https://a11y-corporate-site.naruse-works.workers.dev` に更新する。
 - **対応する達成基準**：運用・URL の正しさ（UI 達成基準の変更ではない）。Issue #25。サイトは Basic 認証と `X-Robots-Tag: noindex` のため、SEO 露出ではなく生成絶対 URL の整合が目的。
 - **選定理由**：`example.com` のままだと canonical / `Astro.site` 等が実配信先と食い違う。trailingSlash 既定は変更しない。
 - **検討した代替案と却下理由**：カスタムドメイン確定までプレースホルダ維持 → 現時点の唯一の本番 URL が workers.dev のため更新する。sitemap / robots 変更はこの PR の範囲外。
