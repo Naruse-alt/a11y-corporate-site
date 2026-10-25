@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-25 / Basic 認証の資格情報比較で短絡評価を排除
+
+- **判断内容**：`verifyBasicAuth` でユーザー名・パスワードの `timingSafeEqual` を先に両方評価し、その結果の論理積で 401 を判定する。`timingSafeEqual` 自体は長さ差でも早期 return せず max 長まで比較する既存実装を維持。
+- **対応する達成基準**：運用・セキュリティ（UI 達成基準の変更ではない）。Issue #22。
+- **選定理由**：`||` の短絡でパスワード比較が省略されると、応答時間差からユーザー名の正否が推測されうる。変数に受けてから判定すれば比較処理は常に両方走る。
+- **検討した代替案と却下理由**：ビット演算（`&`）だけで短絡を避ける案 → 可読性が落ちるため、明示的な二段評価を選定。
+
 ## 2026-10-22 / Dependabot（version updates）の導入
 
 - **判断内容**：`.github/dependabot.yml` で `npm` と `github-actions` を週次（Asia/Tokyo・月曜 09:00）に監視。npm は minor/patch をグループ化、major は個別。github-actions は一括グループ。コミット prefix は既存規約に合わせ `chore(deps)` / `ci(deps)`。
