@@ -9,13 +9,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/generate-csp.mjs",
     "preview": "astro preview",
     "preview:cf": "npm run build && wrangler dev",
     "deploy:cf": "npm run build && wrangler deploy",
     "check": "astro check",
     "contrast": "node scripts/contrast.mjs",
     "test:basic-auth": "node scripts/test-basic-auth.mjs",
+    "test:csp": "node scripts/generate-csp.mjs --check",
     "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
