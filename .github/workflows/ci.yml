@@ -41,16 +41,20 @@ jobs:
       - name: Type check
         run: npm run check
 
-      # 静的サイトが実際にビルドできることを確認する
+      # 静的サイトが実際にビルドできることを確認する（CSP ハッシュ生成も含む）
       - name: Build
         run: npm run build
+
+      # 生成された CSP がコミット済みファイルと一致すること（インライン変更の検知）
+      - name: CSP policy up to date
+        run: git diff --exit-code -- workers/csp-policy.generated.js
 
       # tokens.css の色ペアが WCAG AA を満たすか機械判定する（推測禁止ルールの根拠）
       # 根拠: docs/decisions.md「コントラスト検証ツール scripts/contrast.mjs」
       - name: Contrast check
         run: npm run contrast
 
-      # Basic 認証ヘルパーのユニット検証（シークレット不要・純 Node）
+      # Basic 認証ヘルパーとセキュリティヘッダーのユニット検証（シークレット不要）
       - name: Basic auth unit check
         run: npm run test:basic-auth
 
