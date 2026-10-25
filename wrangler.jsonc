@@ -3,6 +3,12 @@
   "name": "a11y-corporate-site",
   "compatibility_date": "2026-09-12",
   "main": "workers/basic-auth.js",
+  // workers.dev 本番 URL を明示（route 未設定時の暗黙 true に頼らない）
+  "workers_dev": true,
+  // Version / Preview URL を明示オプトイン。省略すると既存ダッシュボード設定を変えず、
+  // 初期値も workers_dev 依存になるため、PR レビュー用プレビューをコードで固定する。
+  // 公開到達可能だが run_worker_first により Basic 認証とセキュリティヘッダーが全応答に付く。
+  "preview_urls": true,
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
