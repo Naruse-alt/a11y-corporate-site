@@ -16,11 +16,16 @@ function encodeBasic(u, p) {
 assert.deepEqual(verifyBasicAuth(null, user, pass), { ok: false, status: 401 });
 assert.deepEqual(verifyBasicAuth('Bearer x', user, pass), { ok: false, status: 400 });
 assert.deepEqual(verifyBasicAuth('Basic !!!', user, pass), { ok: false, status: 400 });
+// ユーザー名誤り / パスワード誤り / 両方誤り / 正しい資格情報
 assert.deepEqual(verifyBasicAuth(encodeBasic('wrong', pass), user, pass), {
   ok: false,
   status: 401,
 });
 assert.deepEqual(verifyBasicAuth(encodeBasic(user, 'nope'), user, pass), {
+  ok: false,
+  status: 401,
+});
+assert.deepEqual(verifyBasicAuth(encodeBasic('wrong', 'nope'), user, pass), {
   ok: false,
   status: 401,
 });

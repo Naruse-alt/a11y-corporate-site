@@ -59,7 +59,10 @@ export function verifyBasicAuth(authorizationHeader, expectedUser, expectedPass)
   const user = decoded.slice(0, index);
   const pass = decoded.slice(index + 1);
 
-  if (!timingSafeEqual(expectedUser, user) || !timingSafeEqual(expectedPass, pass)) {
+  // 短絡評価でパスワード比較が省略されないよう、両方を先に評価する。
+  const userMatches = timingSafeEqual(expectedUser, user);
+  const passMatches = timingSafeEqual(expectedPass, pass);
+  if (!(userMatches && passMatches)) {
     return { ok: false, status: 401 };
   }
 
