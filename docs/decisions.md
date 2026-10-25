@@ -11,6 +11,7 @@
 - **選定理由**：
   - `assets.run_worker_first = true` のため全リクエストが Worker を通る。静的 `_headers` では Worker 生成の 401 にヘッダーが付かない。
   - インライン script（テーマ・ドロワー・お問い合わせ）とページごとの `<style>` があるため、ビルド成果物からハッシュを集約する。
+  - HSTS は `max-age=63072000` のみ。配信が workers.dev サブドメインのため preload 登録対象外（親ドメインが preload 済み）で、`includeSubDomains` も実効がない。
 - **検討した代替案と却下理由**：
   - `_headers` のみ → 401 に付かないため却下。
   - `script-src 'unsafe-inline'` → 要件に反するため却下。

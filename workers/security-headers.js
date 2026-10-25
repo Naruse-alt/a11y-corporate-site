@@ -13,8 +13,8 @@ export const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   // 不要なブラウザ機能を明示的に閉じる（デモサイトで使う API は無い）
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-  // HTTPS 前提の限定共有。2 年 + preload 候補
-  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+  // HTTPS 前提。workers.dev 配下のため includeSubDomains / preload は付けない
+  'Strict-Transport-Security': 'max-age=63072000',
   'X-Robots-Tag': 'noindex, nofollow',
 };
 
