@@ -2,6 +2,7 @@
   "name": "a11y-corporate-site",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=24.22.1"
