@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-10-25 / セキュリティヘッダーと CSP（ハッシュ）
+
+- **判断内容**：CSP / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy / HSTS / X-Robots-Tag を `workers/basic-auth.js`（と `unauthorizedResponse`）で全レスポンスに付与。CSP は `unsafe-inline` なし。`dist/` のインライン script/style から SHA-256 を算出し `workers/csp-policy.generated.js` を生成。CI で生成結果とコミット差分を照合する。
+- **対応する達成基準**：運用・セキュリティ（UI 達成基準の変更ではない）。Issue #23。
+- **選定理由**：
+  - `assets.run_worker_first = true` のため全リクエストが Worker を通る。静的 `_headers` では Worker 生成の 401 にヘッダーが付かない。
+  - インライン script（テーマ・ドロワー・お問い合わせ）とページごとの `<style>` があるため、ビルド成果物からハッシュを集約する。
+  - HSTS は `max-age=63072000` のみ。配信が workers.dev サブドメインのため preload 登録対象外（親ドメインが preload 済み）で、`includeSubDomains` も実効がない。
+- **検討した代替案と却下理由**：
+  - `_headers` のみ → 401 に付かないため却下。
+  - `script-src 'unsafe-inline'` → 要件に反するため却下。
+
 ## 2026-10-25 / Basic 認証の資格情報比較で短絡評価を排除
 
 - **判断内容**：`verifyBasicAuth` でユーザー名・パスワードの `timingSafeEqual` を先に両方評価し、その結果の論理積で 401 を判定する。`timingSafeEqual` 自体は長さ差でも早期 return せず max 長まで比較する既存実装を維持。
