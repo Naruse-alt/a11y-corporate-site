@@ -14,31 +14,31 @@
 :root {
   color-scheme: light dark;
 
-  /* --- 色: ライトモード --- */
+  /* --- 色: ライトモード（公式 A1） --- */
   --color-bg: #ffffff;
-  --color-surface: #f4f4f4; /* 面(カード等) */
-  --color-surface-2: #ebebeb; /* 一段沈んだ面・淡いパネル */
-  --color-text: #0c1414;
-  --color-text-muted: #5c6060;
-  --color-border: #6a7070; /* 意味を持つ境界(3:1以上) */
-  --color-border-subtle: #e2e2e0; /* 装飾的な区切り */
+  --color-surface: #f4f6f6; /* 面(カード等) */
+  --color-surface-2: #e8eded; /* 一段沈んだ面・淡いパネル */
+  --color-text: #0f1416;
+  --color-text-muted: #485154;
+  --color-border: #646d70; /* 意味を持つ境界(3:1以上) */
+  --color-border-subtle: #dce2e2; /* 装飾的な区切り */
   --color-link: #007370;
   --color-primary: #007370;
-  --color-primary-strong: #005c5a; /* ホバー等の強調 */
+  --color-primary-strong: #00595a; /* ホバー等の強調 */
   --color-on-primary: #ffffff;
   /* フォーム状態。色だけで伝えない（テキスト・アイコン併用）。比は contrast.mjs で検証 */
-  --color-danger: #a3200f;
-  --color-success: #2c6a2f;
+  --color-danger: #b0200e;
+  --color-success: #1d6e30;
 
   /* 装飾アクセント。情報を色だけで持たせない（1.4.1）。文字色には accent-strong を使う */
-  --color-accent: #e8897c;
-  --color-accent-2: #f2b54a;
-  --color-accent-strong: #a8432f;
-  --color-accent-subtle: #fce4dc;
+  --color-accent: #ff6a52;
+  --color-accent-2: #f7b52c;
+  --color-accent-strong: #b8341c;
+  --color-accent-subtle: #ffe4dd;
 
   /* フォーカスリング: 明色 + 暗色の二重アウトライン (2.4.7 A)。 */
   --color-focus-inner: #ffffff;
-  --color-focus-outer: #004d4b;
+  --color-focus-outer: #003f3f;
 
   /* --- 余白 --- */
   --space-1: 0.25rem;
@@ -91,27 +91,27 @@
   --transition: 200ms ease;
 }
 
-/* ダークモードの色 (手動選択) */
+/* ダークモードの色 (手動選択・公式 A1) */
 :root[data-theme="dark"] {
-  --color-bg: #0c1010;
-  --color-surface: #141818;
-  --color-surface-2: #1c2222;
-  --color-text: #f4f6f6;
-  --color-text-muted: #a8b2b2;
-  --color-border: #8a9494;
-  --color-border-subtle: #2a3030;
-  --color-link: #3dcdc4;
-  --color-primary: #3dcdc4;
-  --color-primary-strong: #6ad9d1;
-  --color-on-primary: #0a1010;
-  --color-danger: #ffb4a8;
-  --color-success: #93dc9b;
-  --color-accent: #f29a8a;
-  --color-accent-2: #f2c46a;
-  --color-accent-strong: #f6ae9f;
-  --color-accent-subtle: #3a2a27;
-  --color-focus-inner: #0a1010;
-  --color-focus-outer: #8ae0d8;
+  --color-bg: #0d1011;
+  --color-surface: #151a1b;
+  --color-surface-2: #1e2526;
+  --color-text: #f5f7f7;
+  --color-text-muted: #b5bfbf;
+  --color-border: #86908f;
+  --color-border-subtle: #2b3334;
+  --color-link: #3fd2c4;
+  --color-primary: #3fd2c4;
+  --color-primary-strong: #8ae8de;
+  --color-on-primary: #03100f;
+  --color-danger: #ffad9f;
+  --color-success: #7fe08f;
+  --color-accent: #ff7f6a;
+  --color-accent-2: #f8c445;
+  --color-accent-strong: #ffa597;
+  --color-accent-subtle: #3b221e;
+  --color-focus-inner: #03100f;
+  --color-focus-outer: #9ff0e8;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
   --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
@@ -122,25 +122,25 @@
 /* ダークモードの色 (OS 追従。ただし手動でライト指定時は適用しない) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #0c1010;
-    --color-surface: #141818;
-    --color-surface-2: #1c2222;
-    --color-text: #f4f6f6;
-    --color-text-muted: #a8b2b2;
-    --color-border: #8a9494;
-    --color-border-subtle: #2a3030;
-    --color-link: #3dcdc4;
-    --color-primary: #3dcdc4;
-    --color-primary-strong: #6ad9d1;
-    --color-on-primary: #0a1010;
-    --color-danger: #ffb4a8;
-    --color-success: #93dc9b;
-    --color-accent: #f29a8a;
-    --color-accent-2: #f2c46a;
-    --color-accent-strong: #f6ae9f;
-    --color-accent-subtle: #3a2a27;
-    --color-focus-inner: #0a1010;
-    --color-focus-outer: #8ae0d8;
+    --color-bg: #0d1011;
+    --color-surface: #151a1b;
+    --color-surface-2: #1e2526;
+    --color-text: #f5f7f7;
+    --color-text-muted: #b5bfbf;
+    --color-border: #86908f;
+    --color-border-subtle: #2b3334;
+    --color-link: #3fd2c4;
+    --color-primary: #3fd2c4;
+    --color-primary-strong: #8ae8de;
+    --color-on-primary: #03100f;
+    --color-danger: #ffad9f;
+    --color-success: #7fe08f;
+    --color-accent: #ff7f6a;
+    --color-accent-2: #f8c445;
+    --color-accent-strong: #ffa597;
+    --color-accent-subtle: #3b221e;
+    --color-focus-inner: #03100f;
+    --color-focus-outer: #9ff0e8;
 
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
     --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
