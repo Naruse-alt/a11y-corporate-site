@@ -15,9 +15,7 @@ import { services } from '../data/services';
     <div class="hero__grid">
       <div class="hero__body">
         <p class="eyebrow">Web アクセシビリティ</p>
-        <h1 id="hero-heading">
-          誰も取り残さない Web を、<span class="hero__emphasis">標準の力で。</span>
-        </h1>
+        <h1 id="hero-heading">誰も取り残さない Web を、標準の力で。</h1>
         <p class="lead">
           Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
           WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
@@ -159,32 +157,6 @@ import { services } from '../data/services';
     font-size: var(--text-4xl);
   }
 
-  /*
-   * 装飾の手描きストローク (1.4.1: 意味は見出し本文が担う)。
-   * SVG は --color-accent と同色。mask だと文字も消えるため background-image を使う。
-   * 行分割時は box-decoration-break: clone で各行フラグメントに付く。
-   */
-  .hero__emphasis {
-    text-decoration: none;
-    padding-bottom: 0.18em;
-    background-image: url('/images/hero-emphasis-stroke.svg');
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    background-size: 100% 0.38em;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-  }
-
-  :root[data-theme='dark'] .hero__emphasis {
-    background-image: url('/images/hero-emphasis-stroke-dark.svg');
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .hero__emphasis {
-      background-image: url('/images/hero-emphasis-stroke-dark.svg');
-    }
-  }
-
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
@@ -244,14 +216,6 @@ import { services } from '../data/services';
     .hero__visual {
       border-color: CanvasText;
       box-shadow: none;
-    }
-
-    .hero__emphasis {
-      background-image: none;
-      text-decoration-line: underline;
-      text-decoration-color: CanvasText;
-      text-decoration-thickness: 0.12em;
-      text-underline-offset: 0.12em;
     }
   }
 </style>
