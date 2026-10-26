@@ -10,6 +10,8 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 interface Props {
   title: string;
   description?: string;
+  /** サイト相対パス。省略時は既定の OG 画像 */
+  ogImage?: string;
 }
 
 interface Crumb {
@@ -17,7 +19,7 @@ interface Crumb {
   label: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogImage = '/images/og-image.jpg' } = Astro.props;
 const path = Astro.url.pathname;
 const fullTitle = `${title} | Inclusive Works`;
 
@@ -25,6 +27,13 @@ const fullTitle = `${title} | Inclusive Works`;
 // 現在地ラベルはページの title をそのまま使うため、ページ側の追記は不要。
 const breadcrumbs: Crumb[] | null =
   path === '/' ? null : [{ href: '/', label: 'ホーム' }, { label: title }];
+
+// site は astro.config の絶対 URL。canonical / og:image に使う。
+const site = Astro.site ?? new URL('https://a11y-corporate-site.naruse-works.workers.dev');
+const canonicalUrl = new URL(path, site).href;
+const ogImageUrl = new URL(ogImage, site).href;
+const ogImageAlt =
+  '車いすの人や白杖を持つ人など4人がノートPCを囲む手描きイラストと、Inclusive Works のロゴ';
 ---
 
 <!doctype html>
@@ -34,6 +43,27 @@ const breadcrumbs: Crumb[] | null =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    {/* ブラウザ UI の色。値はパレット A1 の --color-bg（ライト／ダーク）に合わせる */}
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1011" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Inclusive Works" />
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
 
     {/*
       ちらつき防止: 描画前に保存済みテーマを適用する。
