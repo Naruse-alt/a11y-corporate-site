@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-25 / SECURITY.md と MIT LICENSE を追加する
+
+- **判断内容**：ルートに `LICENSE`（MIT、Copyright (c) 2026 Naruse-alt）と `SECURITY.md` を追加し、`package.json` の `license` を `MIT` にする。Issue #26。
+- **対応する達成基準**：運用・公開準備（UI 達成基準の変更ではない）。
+- **選定理由**：公開前に利用条件と脆弱性報告窓口を明示する。MIT は依存・周辺 OSS と整合しやすく、再配布の摩擦が小さい。報告はメールではなく GitHub Private vulnerability reporting に統一し、連絡先の露出と公開 Issue への誤投稿を避ける。対応はベストエフォートとし、期限の約束はしない。
+- **検討した代替案と却下理由**：メール窓口 → アドレスの公開・管理コストと誤用リスクがあるため却下。より厳しいコピーレフト → 本リポジトリの規模と依存構成に対して過剰。第三者フォント（IBM Plex Sans JP / OFL-1.1）の再ライセンスは不可のため、本 LICENSE の対象外として扱う。
+
 ## 2026-10-25 / Astro `site` を本番 workers.dev URL にする
 
 - **判断内容**：`astro.config.mjs` の `site` を `https://a11y-corporate-site.naruse-works.workers.dev` に更新する。
