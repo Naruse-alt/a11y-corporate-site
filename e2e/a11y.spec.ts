@@ -143,6 +143,27 @@ test.describe('モバイルドロワー', () => {
   });
 });
 
+test.describe('ファビコンと OGP', () => {
+  test('head に icon / og:image があり、アセットが 200 を返す', async ({ page, request }) => {
+    // 理由: タブ識別と共有プレビュー用メタが欠けるとブランディングが崩れる。
+    // Basic 認証下ではクローラは取れないが、配信パスとマークアップは常に正しい状態を保つ。
+    await page.goto('/');
+
+    await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toHaveCount(1);
+    await expect(page.locator('link[rel="icon"][href="/favicon.svg"]')).toHaveCount(1);
+    await expect(page.locator('link[rel="apple-touch-icon"][href="/apple-touch-icon.png"]')).toHaveCount(1);
+
+    const ogImage = page.locator('meta[property="og:image"]');
+    await expect(ogImage).toHaveAttribute('content', /\/images\/og-image\.jpg$/);
+
+    const faviconSvg = await request.get('/favicon.svg');
+    expect(faviconSvg.status()).toBe(200);
+
+    const og = await request.get('/images/og-image.jpg');
+    expect(og.status()).toBe(200);
+  });
+});
+
 test.describe('お問い合わせフォーム', () => {
   test('エラー表示が aria で入力欄と結びつく', async ({ page }) => {
     // 守る基準: 3.3.1 エラーの特定 A / 1.3.1 情報及び関係性 A / 4.1.2 名前・役割・値 A
