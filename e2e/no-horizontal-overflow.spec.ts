@@ -76,27 +76,56 @@ test.describe('ヘッダーとヒーロー本文の左端一致', () => {
   }
 });
 
-test.describe('h1 の「誰も取り残さない」が1行（通常ズーム・1024px以上）', () => {
+const heroPhrases = ['誰も取り残さない', 'Web を、', '標準の力で。'] as const;
+
+test.describe('h1 が3句・3行（通常ズーム・1024px以上）', () => {
   for (const width of h1SingleLineWidths) {
     for (const theme of themes) {
       test(`${width}px / ${theme}`, async ({ page }) => {
         await page.setViewportSize({ width, height: 900 });
         await gotoHome(page, theme);
 
-        const lineCount = await page.evaluate(() => {
+        const result = await page.evaluate((expected) => {
           const h1 = document.getElementById('hero-heading');
-          if (!(h1 instanceof HTMLElement)) return -1;
-          const text = h1.firstChild;
-          if (!(text instanceof Text)) return -1;
-          const range = document.createRange();
-          // 「誰も取り残さない」は先頭の8文字（次の <wbr> まで）
-          range.setStart(text, 0);
-          range.setEnd(text, Math.min(8, text.data.length));
-          return range.getClientRects().length;
-        });
+          if (!(h1 instanceof HTMLElement)) {
+            return { ok: false as const, reason: 'h1 なし' };
+          }
+          const phrases = [...h1.querySelectorAll('.hero__phrase')];
+          if (phrases.length !== expected.length) {
+            return {
+              ok: false as const,
+              reason: `phrase 数 ${phrases.length}`,
+            };
+          }
+          const texts = phrases.map((el) => el.textContent ?? '');
+          const lines = phrases.map((el) => {
+            const rects = [...el.getClientRects()].filter((r) => r.width > 0 && r.height > 0);
+            return {
+              text: el.textContent ?? '',
+              lineCount: rects.length,
+              top: rects[0] ? Math.round(rects[0].top) : -1,
+            };
+          });
+          // display:block 由来の改行だけ除去。句内のスペース（Web を、）は残す
+          const name = (h1.textContent ?? '').replace(/[\n\r]+/g, '');
+          const expectedName = expected.join('');
+          return { ok: true as const, texts, lines, name, expectedName };
+        }, [...heroPhrases]);
 
-        expect(lineCount, 'h1 先頭テキストノードが見つからない').toBeGreaterThan(0);
-        expect(lineCount, `「誰も取り残さない」が ${lineCount} 行に折り返している`).toBe(1);
+        expect(result.ok, !result.ok ? result.reason : 'h1 解析失敗').toBe(true);
+        if (!result.ok) return;
+
+        expect(result.texts).toEqual([...heroPhrases]);
+        expect(result.name, 'アクセシブルネーム相当の連結テキスト').toBe(
+          '誰も取り残さないWeb を、標準の力で。',
+        );
+        expect(result.lines).toHaveLength(3);
+        for (const [i, line] of result.lines.entries()) {
+          expect(line.text, `句${i + 1}`).toBe(heroPhrases[i]);
+          expect(line.lineCount, `句「${line.text}」の行数`).toBe(1);
+        }
+        expect(result.lines[0].top).toBeLessThan(result.lines[1].top);
+        expect(result.lines[1].top).toBeLessThan(result.lines[2].top);
       });
     }
   }
