@@ -173,18 +173,19 @@ import { services } from '../data/services';
   }
 
   /*
-   * 「誰も取り残さない」(8字) が列幅に収まるよう 12cqi を目安にする。
-   * 下限はモバイルでの見え方を維持。句は .hero__phrase で行分割。
+   * 太字で約 8em 幅の「誰も取り残さない」が列に収まるよう、
+   * preferred を min(12cqi, 100cqi/8.4) にする（余白込みの安全係数 8.4）。
+   * 下限は 320px 幅でも句内折り返しを強制しない値。句は .hero__phrase で行分割。
    */
   .hero h1 {
-    font-size: clamp(3.0375rem, 12cqi, 4.25rem);
+    font-size: clamp(1.75rem, min(12cqi, calc(100cqi / 8.4)), 4.25rem);
     line-height: var(--leading-tight);
     word-break: keep-all;
     /* グローバルの text-wrap: balance だと意図しない折り返しになるため解除 */
     text-wrap: wrap;
   }
 
-  /* 句ごとに1行。拡大で句が列幅を超えるときだけ句内折り返し (1.4.10) */
+  /* 句ごとに1行。200%/400% 拡大で句が列幅を超えるときだけ句内折り返し (1.4.10) */
   .hero__phrase {
     display: block;
     overflow-wrap: anywhere;
