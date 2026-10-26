@@ -44,8 +44,8 @@
   --space-20: 5rem;
 
   /* --- タイポグラフィ --- */
-  /* IBM Plex Sans JP: モダンかつ堅実。フォールバックはシステムゴシック */
-  --font-sans: "IBM Plex Sans JP", system-ui, -apple-system, "Segoe UI",
+  /* Noto Sans JP Variable: 癖の少ない可読ゴシック。フォールバックはシステムゴシック */
+  --font-sans: "Noto Sans JP Variable", system-ui, -apple-system, "Segoe UI",
     "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
 
   /* 流体タイプスケール(clamp)。拡大や狭幅でも破綻しないよう rem 基準。 */
