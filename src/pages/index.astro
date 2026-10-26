@@ -152,11 +152,18 @@ import { services } from '../data/services';
     overflow: visible;
   }
 
-  /* 1.35 × --text-4xl。文節途中の分割を避ける */
+  /* 1.35 × --text-4xl。文節途中の分割を避ける（<wbr> が区切り） */
   .hero h1 {
     font-size: clamp(3.0375rem, 2.3625rem + 3.375vw, 4.3875rem);
     line-height: var(--leading-tight);
-    word-break: auto-phrase;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  @supports (word-break: auto-phrase) {
+    .hero h1 {
+      word-break: auto-phrase;
+    }
   }
 
   .hero .lead {
