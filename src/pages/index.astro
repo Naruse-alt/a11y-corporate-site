@@ -9,13 +9,14 @@ import { services } from '../data/services';
   description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
 >
   <section class="hero" aria-labelledby="hero-heading">
-    {/* 装飾。情報を持たないため aria-hidden。 */}
-    <span class="hero__decoration" aria-hidden="true"></span>
-
     <div class="hero__grid">
       <div class="hero__body">
         <p class="eyebrow">Web アクセシビリティ</p>
-        <h1 id="hero-heading">誰も取り残さない Web を、標準の力で。</h1>
+        {/*
+          文節境界に <wbr>。word-break: auto-phrase 非対応環境向けのフォールバック。
+          <br> は拡大時に行を固定しすぎるため使わない。
+        */}
+        <h1 id="hero-heading">誰も取り残さない<wbr />Web を、<wbr />標準の力で。</h1>
         <p class="lead">
           Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
           WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
@@ -106,55 +107,61 @@ import { services } from '../data/services';
 </BaseLayout>
 
 <style>
+  /*
+   * レイアウト H1（枠なし）。ライトでは白地にイラストを直接置く。
+   * DOM 順は本文→ビジュアル。狭い幅は grid-area だけで画像を上に見せる。
+   */
   .hero {
     position: relative;
     margin-block-start: var(--space-4);
-    padding: clamp(var(--space-8), 5vw, var(--space-16)) clamp(var(--space-4), 4vw, var(--space-12));
-    background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-bg));
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    padding-block: clamp(var(--space-8), 4vw, var(--space-16));
+    padding-inline: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
   }
 
-  .hero__decoration {
-    position: absolute;
-    inset-block-start: -6rem;
-    inset-inline-end: -4rem;
-    inline-size: 18rem;
-    block-size: 18rem;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--color-primary) 16%, transparent),
-      transparent 70%
-    );
-    pointer-events: none;
-  }
-
-  /* 二分割。DOM 順は本文→ビジュアル。
-   * デスクトップ既定で横並びとし、狭い幅だけ縦積みにする。
-   * （min-width: 48rem だと OS 拡大／ブラウザズームで PC でも縦積みになりやすい） */
   .hero__grid {
-    position: relative;
     display: grid;
-    gap: var(--space-6) var(--space-8);
+    gap: var(--space-8);
     align-items: start;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  }
-
-  @media (max-width: 40rem) {
-    .hero__grid {
-      grid-template-columns: 1fr;
-    }
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'visual'
+      'body';
   }
 
   .hero__body {
+    grid-area: body;
     min-width: 0;
     max-width: 36rem;
   }
 
+  .hero__visual {
+    grid-area: visual;
+    min-width: 0;
+    justify-self: stretch;
+    inline-size: 100%;
+    max-inline-size: none;
+    /* ライト: 枠なし。ダークは下で面・枠・影を付ける */
+    border-radius: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  /* 1.35 × --text-4xl。文節途中の分割を避ける */
   .hero h1 {
-    font-size: var(--text-4xl);
+    font-size: clamp(3.0375rem, 2.3625rem + 3.375vw, 4.3875rem);
+    line-height: var(--leading-tight);
+    word-break: auto-phrase;
+  }
+
+  .hero .lead {
+    font-size: max(1rem, var(--text-lg));
+    max-width: 35em; /* 全角 35 字相当を上限 */
   }
 
   .hero__actions {
@@ -165,11 +172,57 @@ import { services } from '../data/services';
     max-width: none;
   }
 
-  .hero__visual {
-    min-width: 0;
-    justify-self: stretch;
-    inline-size: 100%;
-    max-inline-size: 32rem;
+  .hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2; /* 1200×800。CLS 防止。picture 切替時は下で上書き */
+    object-fit: cover;
+    object-position: left center; /* 右端が切れる構図 */
+  }
+
+  @media (max-width: 40rem) {
+    .hero__image {
+      aspect-ratio: 1 / 1; /* 正方形 SP 版に合わせる */
+    }
+  }
+
+  /* デスクトップ: 約 45:55、上下中央。イラストはビューポート右端まで */
+  @media (min-width: 64rem) {
+    .hero {
+      /* .container から全幅へ。右端まで伸ばし横スクロールは出さない */
+      width: 100vw;
+      max-width: 100vw;
+      margin-inline-start: calc(50% - 50vw);
+      margin-inline-end: 0;
+      box-sizing: border-box;
+      padding-inline-start: max(
+        var(--space-4),
+        calc((100vw - 72rem) / 2 + var(--space-4))
+      );
+      padding-inline-end: 0;
+      overflow-x: clip;
+    }
+
+    .hero__grid {
+      grid-template-areas: 'body visual';
+      grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+      align-items: center;
+      gap: var(--space-6) var(--space-8);
+    }
+
+    .hero__body {
+      max-width: none;
+      padding-inline-end: var(--space-4);
+    }
+
+    .hero__visual {
+      justify-self: stretch;
+    }
+  }
+
+  /* ダーク: 白イラストが浮かないよう面・枠・拡散影を残す */
+  :root[data-theme='dark'] .hero__visual {
     border-radius: var(--radius-lg);
     background-color: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
@@ -177,24 +230,25 @@ import { services } from '../data/services';
     overflow: hidden;
   }
 
-  @media (max-width: 40rem) {
-    .hero__visual {
-      justify-self: center;
-      max-inline-size: min(100%, 28rem);
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .hero__visual {
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
     }
   }
 
-  .hero__image {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 2; /* 1200×800。CLS 防止。picture 切替時は下で上書き */
-    object-fit: cover;
-  }
+  @media (min-width: 64rem) {
+    :root[data-theme='dark'] .hero__visual {
+      margin-inline-end: var(--space-4);
+    }
 
-  @media (max-width: 40rem) {
-    .hero__image {
-      aspect-ratio: 1 / 1; /* 正方形 SP 版に合わせる */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) .hero__visual {
+        margin-inline-end: var(--space-4);
+      }
     }
   }
 
@@ -214,7 +268,7 @@ import { services } from '../data/services';
 
   @media (forced-colors: active) {
     .hero__visual {
-      border-color: CanvasText;
+      border: 1px solid CanvasText;
       box-shadow: none;
     }
   }
