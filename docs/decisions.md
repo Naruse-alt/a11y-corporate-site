@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-26 / 認証済み `/_astro/` に長期 Cache-Control を付ける
+
+- **判断内容**：Basic 認証通過後のレスポンスで、パスが `/_astro/` で始まるものだけ `Cache-Control: private, max-age=31536000, immutable` とする。HTML 等は従来どおり `private, no-store`。401/400 は変更しない。判定は `workers/cache-control.js` の純関数に切り出す。
+- **対応する達成基準**：運用・パフォーマンス（UI 達成基準の変更ではない）。ハッシュ付きアセットの再取得と `font-display: swap` が重なり、ページ遷移ごとにフォント差し替えが見えていた。
+- **選定理由**：`/_astro/` はファイル名にコンテンツハッシュが付くため、内容が変われば URL も変わる。ブラウザに長く持たせても古い字体が残り続けない。`private` を残し、共有キャッシュには載せない方針は維持する。
+- **検討した代替案と却下理由**：Worker を通さず `/_astro/` を静的直出し → `run_worker_first` と Basic 認証の前提が崩れるため却下。全レスポンスを長期キャッシュ → HTML の更新反映と認証後コンテンツの扱いが危ういため却下。フォント差し替え（`font-display` 変更等）→ 別途検討とし、本変更の範囲外。
+
 ## 2026-10-25 / SECURITY.md と MIT LICENSE を追加する
 
 - **判断内容**：ルートに `LICENSE`（MIT、Copyright (c) 2026 Naruse-alt）と `SECURITY.md` を追加し、`package.json` の `license` を `MIT` にする。Issue #26。
