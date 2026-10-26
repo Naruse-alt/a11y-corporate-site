@@ -6,7 +6,7 @@
 
 ## 2026-10-26 / OG 画像とファビコンを追加する
 
-- **判断内容**：`public/` に `favicon.svg` / `favicon.ico` / `apple-touch-icon.png`、`public/images/og-image.jpg` を置き、`BaseLayout` の `<head>` でアイコンリンクと OGP／Twitter Card メタを出力する。`og:image` は `Astro.site` 基準の絶対 URL。ページごとに `ogImage` prop で上書き可能とし、既定はこの JPG。ファビコンの塗りはブランドの deep teal（`#0e6466`）。`theme-color` はライト／ダークの背景色（`#fbf9f4` / `#131819`）を `prefers-color-scheme` で切替。
+- **判断内容**：`public/` に `favicon.svg` / `favicon.ico` / `apple-touch-icon.png`、`public/images/og-image.jpg` を置き、`BaseLayout` の `<head>` でアイコンリンクと OGP／Twitter Card メタを出力する。`og:image` は `Astro.site` 基準の絶対 URL。ページごとに `ogImage` prop で上書き可能とし、既定はこの JPG。ファビコンの塗りはパレット A1 の teal（`#007370`）。`theme-color` はライト／ダークの背景色（`#ffffff` / `#0d1011`）を `prefers-color-scheme` で切替。
 - **対応する達成基準**：UI 達成基準の変更ではない（共有プレビューとタブ識別）。`og:image:alt` で画像の内容を補足する。
 - **選定理由**：共有時のプレビューとブラウザタブでの識別のため。SVG はシャープに拡大でき、ICO はレガシー向け、`apple-touch-icon` は iOS ホーム画面用。OG は JPG でおおよそ 130KB に抑える。
 - **検討した代替案と却下理由**：WebP のみの OG → クローラ互換のため JPG を選定。ページごとの個別 OG を必須化 → 現状は共通1枚で足り、必要時だけ prop で差し替える。
