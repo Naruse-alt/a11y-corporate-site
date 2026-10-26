@@ -49,6 +49,74 @@ test.describe('スキップリンク', () => {
   });
 });
 
+test.describe('フォーカスリング（:focus-visible）', () => {
+  test('Tab ではナビリンクにリングが見え、クリックでは見えない', async ({ page }) => {
+    // 守る基準: 2.4.7 フォーカスの可視化 A
+    // 理由: キーボード操作時のみ可視フォーカスを出し、マウスクリックでは枠を出さない。
+    await page.goto('/');
+
+    const services = page.locator('.primary-nav').getByRole('link', { name: 'サービス' });
+
+    // スキップリンクの次がヘッダー操作群。サービスへ届くまで Tab する。
+    for (let i = 0; i < 12; i += 1) {
+      await page.keyboard.press('Tab');
+      if (await services.evaluate((el) => el === document.activeElement).catch(() => false)) break;
+    }
+    await expect(services).toBeFocused();
+
+    const keyboardRing = await services.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { outlineStyle: s.outlineStyle, outlineWidth: s.outlineWidth, boxShadow: s.boxShadow };
+    });
+    const keyboardVisible =
+      (keyboardRing.outlineStyle !== 'none' && keyboardRing.outlineWidth !== '0px') ||
+      keyboardRing.boxShadow !== 'none';
+    expect(keyboardVisible, `keyboard ring missing: ${JSON.stringify(keyboardRing)}`).toBe(true);
+
+    // 遷移前にスタイルを読む（クリック後のナビゲーションでフォーカスが外れるため）。
+    await page.goto('/');
+    const servicesFresh = page.locator('.primary-nav').getByRole('link', { name: 'サービス' });
+    await servicesFresh.evaluate((el) => {
+      el.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+        },
+        { once: true },
+      );
+    });
+    await servicesFresh.click();
+    await expect(servicesFresh).toBeFocused();
+
+    const mouseRing = await servicesFresh.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { outlineStyle: s.outlineStyle, outlineWidth: s.outlineWidth, boxShadow: s.boxShadow };
+    });
+    const mouseVisible =
+      (mouseRing.outlineStyle !== 'none' && mouseRing.outlineWidth !== '0px') ||
+      mouseRing.boxShadow !== 'none';
+    expect(mouseVisible, `mouse ring still visible: ${JSON.stringify(mouseRing)}`).toBe(false);
+  });
+});
+
+test.describe('ナビと本文のリンク下線', () => {
+  test('フッターナビは通常時下線なし、本文リンクは下線あり', async ({ page }) => {
+    // 守る基準: 1.4.1 色の使用 A（本文リンクは下線で色以外の手がかりを維持）
+    // 理由: ナビは見出し付き一覧でリンクだとわかる。本文リンクは下線を残す。
+    await page.goto('/');
+
+    const footerLink = page.locator('.site-footer__nav a').first();
+    const footerDecoration = await footerLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
+    expect(footerDecoration).toBe('none');
+
+    // ボタン見た目のリンクは下線なしが意図どおり。本文の通常リンクを対象にする。
+    const mainLink = page.locator('main a:not(.button)').first();
+    await expect(mainLink).toBeVisible();
+    const mainDecoration = await mainLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
+    expect(mainDecoration).toContain('underline');
+  });
+});
+
 test.describe('モバイルドロワー', () => {
   test('Esc で閉じるとメニューボタンへフォーカスが戻る', async ({ page }) => {
     // 守る基準: 2.1.2 キーボードトラップなし A / 2.4.3 フォーカス順序 A / 4.1.2 名前・役割・値 A
