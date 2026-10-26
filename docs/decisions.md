@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-26 / サンセリフを Zen Kaku Gothic New に変更する
+
+- **判断内容**：サイト全体のサンセリフを IBM Plex Sans JP から **Zen Kaku Gothic New**（ウェイト 400 / 700）へ変更。`@fontsource/zen-kaku-gothic-new` でセルフホストし、latin / japanese サブセットのみ読み込む。
+- **対応する達成基準**：見た目・ブランド（UI 達成基準の変更ではない）。コントラストは色トークン依存のためフォント差し替え単独では変えない。1.4.12 テキストの間隔は固定高さボックスを作らない既存方針を維持。
+- **選定理由**：もう少しモダンで洒落た、硬すぎない印象にしたい。OFL-1.1 であり、ルートの MIT `LICENSE` の対象外（再ライセンスしない）。
+- **検討した代替案と却下理由**：M PLUS 2 → 字面がやや丸くカジュアル寄りでコーポレートの落ち着きが弱い。Zen Maru Gothic → 丸ゴシックで印象が柔らかすぎる。BIZ UDPGothic → 情報設計向けで堅実だが、今回求める「洒落た」方向とずれる。IBM Plex Sans JP 継続 → 硬さが残るため見送り。
+
 ## 2026-10-25 / SECURITY.md と MIT LICENSE を追加する
 
 - **判断内容**：ルートに `LICENSE`（MIT、Copyright (c) 2026 Naruse-alt）と `SECURITY.md` を追加し、`package.json` の `license` を `MIT` にする。Issue #26。
