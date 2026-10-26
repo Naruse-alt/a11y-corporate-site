@@ -100,20 +100,25 @@ test.describe('フォーカスリング（:focus-visible）', () => {
 });
 
 test.describe('ナビと本文のリンク下線', () => {
-  test('フッターナビは通常時下線なし、本文リンクは下線あり', async ({ page }) => {
-    // 守る基準: 1.4.1 色の使用 A（本文リンクは下線で色以外の手がかりを維持）
-    // 理由: ナビは見出し付き一覧でリンクだとわかる。本文リンクは下線を残す。
+  test('インラインリンクは下線あり、.link-quiet は通常時下線なし', async ({ page }) => {
+    // 守る基準: 1.4.1 色の使用 A（本文インラインは下線で色以外の手がかりを維持）
+    // 理由: ナビ系は .link-quiet。段落内リンクは下線を残す。
     await page.goto('/');
 
-    const footerLink = page.locator('.site-footer__nav a').first();
-    const footerDecoration = await footerLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
-    expect(footerDecoration).toBe('none');
+    const quietLink = page.locator('.site-footer__nav a.link-quiet').first();
+    const quietDecoration = await quietLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
+    expect(quietDecoration).toBe('none');
 
-    // ボタン見た目のリンクは下線なしが意図どおり。本文の通常リンクを対象にする。
-    const mainLink = page.locator('main a:not(.button)').first();
-    await expect(mainLink).toBeVisible();
-    const mainDecoration = await mainLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
-    expect(mainDecoration).toContain('underline');
+    const cardQuiet = page.locator('main a.card__title-link.link-quiet').first();
+    await expect(cardQuiet).toBeVisible();
+    const cardDecoration = await cardQuiet.evaluate((el) => getComputedStyle(el).textDecorationLine);
+    expect(cardDecoration).toBe('none');
+
+    // AnnotationCue の文中リンク（.button / .link-quiet 以外）
+    const inlineLink = page.locator('main a:not(.button):not(.link-quiet)').first();
+    await expect(inlineLink).toBeVisible();
+    const inlineDecoration = await inlineLink.evaluate((el) => getComputedStyle(el).textDecorationLine);
+    expect(inlineDecoration).toContain('underline');
   });
 });
 

@@ -83,7 +83,7 @@ import { services } from '../data/services';
             </span>
             {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
             <h3>
-              <a class="card__title-link" href={`/services/#${service.id}`}>
+              <a class="card__title-link link-quiet" href={`/services/#${service.id}`}>
                 {service.title}
               </a>
             </h3>
@@ -203,13 +203,13 @@ import { services } from '../data/services';
     }
   }
 
+  /* 下線は .link-quiet。ホバー時に色も変えてカード見出しだとわかりやすくする */
   .card__title-link {
     color: var(--color-text);
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
   }
 
-  .card__title-link:hover {
+  .card__title-link:hover,
+  .card__title-link:focus-visible {
     color: var(--color-link);
   }
 
