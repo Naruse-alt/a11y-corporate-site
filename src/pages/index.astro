@@ -19,10 +19,16 @@ import { services } from '../data/services';
         <div class="hero__body">
           <p class="eyebrow">Web アクセシビリティ</p>
           {/*
-            文節境界に <wbr>。word-break: auto-phrase 非対応環境向けのフォールバック。
-            <br> は拡大時に行を固定しすぎるため使わない。
+            3句を span.hero__phrase（display:block）で区切る。
+            通常幅では常に「誰も取り残さない / Web を、 / 標準の力で。」の3行。
+            拡大時は句内で折り返してよい（横はみ出しは不可）。
+            中身はテキストのみの span なので、アクセシブルネームは1つの見出しとして連結される。
           */}
-          <h1 id="hero-heading">誰も取り残さない<wbr />Web を、<wbr />標準の力で。</h1>
+          <h1 id="hero-heading">
+            <span class="hero__phrase">誰も取り残さない</span>
+            <span class="hero__phrase">Web を、</span>
+            <span class="hero__phrase">標準の力で。</span>
+          </h1>
           <p class="lead">
             Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
             WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
@@ -168,21 +174,20 @@ import { services } from '../data/services';
 
   /*
    * 「誰も取り残さない」(8字) が列幅に収まるよう 12cqi を目安にする。
-   * 下限はモバイルでの見え方を維持。拡大時は <wbr> で文節折り返し可。
+   * 下限はモバイルでの見え方を維持。句は .hero__phrase で行分割。
    */
   .hero h1 {
     font-size: clamp(3.0375rem, 12cqi, 4.25rem);
     line-height: var(--leading-tight);
     word-break: keep-all;
-    overflow-wrap: normal;
     /* グローバルの text-wrap: balance だと意図しない折り返しになるため解除 */
     text-wrap: wrap;
   }
 
-  @supports (word-break: auto-phrase) {
-    .hero h1 {
-      word-break: auto-phrase;
-    }
+  /* 句ごとに1行。拡大で句が列幅を超えるときだけ句内折り返し (1.4.10) */
+  .hero__phrase {
+    display: block;
+    overflow-wrap: anywhere;
   }
 
   .hero .lead {
