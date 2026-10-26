@@ -7,30 +7,38 @@
  *   - :root                          … ライトモード(既定)
  *   - :root[data-theme="dark"]       … 手動でダークを選択した場合
  *   - @media (prefers-color-scheme)  … OS設定に追従(手動でライト指定時は除外)
+ *
+ * パレット A1 (Clean white): 近白背景 / 近黒文字 / 彩度の高い teal / coral は控えめ
  */
 
 :root {
   color-scheme: light dark;
 
-  /* --- 色: ライトモード --- */
+  /* --- 色: ライトモード（公式 A1） --- */
   --color-bg: #ffffff;
-  --color-surface: #f2f5f8; /* 面(カード等) */
-  --color-surface-2: #e7edf3; /* 一段沈んだ面・淡いパネル */
-  --color-text: #14181c;
-  --color-text-muted: #505b66;
-  --color-border: #67717c; /* 意味を持つ境界(3:1以上) */
-  --color-border-subtle: #d3dbe3; /* 装飾的な区切り */
-  --color-link: #0b57a4;
-  --color-primary: #0b57a4;
-  --color-primary-strong: #084a8c; /* ホバー等の強調 */
+  --color-surface: #f4f6f6; /* 面(カード等) */
+  --color-surface-2: #e8eded; /* 一段沈んだ面・淡いパネル */
+  --color-text: #0f1416;
+  --color-text-muted: #485154;
+  --color-border: #646d70; /* 意味を持つ境界(3:1以上) */
+  --color-border-subtle: #dce2e2; /* 装飾的な区切り */
+  --color-link: #007370;
+  --color-primary: #007370;
+  --color-primary-strong: #00595a; /* ホバー等の強調 */
   --color-on-primary: #ffffff;
   /* フォーム状態。色だけで伝えない（テキスト・アイコン併用）。比は contrast.mjs で検証 */
-  --color-danger: #a11a0e;
-  --color-success: #0d6b3a;
+  --color-danger: #b0200e;
+  --color-success: #1d6e30;
+
+  /* 装飾アクセント。情報を色だけで持たせない（1.4.1）。文字色には accent-strong を使う */
+  --color-accent: #ff6a52;
+  --color-accent-2: #f7b52c;
+  --color-accent-strong: #b8341c;
+  --color-accent-subtle: #ffe4dd;
 
   /* フォーカスリング: 明色 + 暗色の二重アウトライン (2.4.7 A)。 */
   --color-focus-inner: #ffffff;
-  --color-focus-outer: #0b3d70;
+  --color-focus-outer: #003f3f;
 
   /* --- 余白 --- */
   --space-1: 0.25rem;
@@ -73,56 +81,69 @@
 
   /* 影は機能的なオーバーレイ表現のため rgb を直接指定(色トークン対象外)。
      forced-colors では自動的に無効化され、境界線が構造を担保する。 */
-  --shadow-sm: 0 1px 2px rgb(15 23 32 / 6%), 0 2px 6px rgb(15 23 32 / 6%);
-  --shadow-md: 0 6px 16px rgb(15 23 32 / 10%), 0 2px 6px rgb(15 23 32 / 6%);
+  --shadow-sm: 0 1px 2px rgb(27 32 34 / 6%), 0 2px 6px rgb(27 32 34 / 6%);
+  --shadow-md: 0 6px 16px rgb(27 32 34 / 10%), 0 2px 6px rgb(27 32 34 / 6%);
+  /* 面からわずかに浮く柔らかい拡散。ハードなオフセットは使わない */
+  --shadow-soft: 0 0.35rem 1.25rem rgb(27 32 34 / 7%), 0 0.1rem 0.35rem rgb(27 32 34 / 4%);
 
   /* モーションのデフォルト(reduced-motion で無効化) */
   --transition-fast: 120ms ease;
   --transition: 200ms ease;
 }
 
-/* ダークモードの色 (手動選択) */
+/* ダークモードの色 (手動選択・公式 A1) */
 :root[data-theme="dark"] {
-  --color-bg: #12171d;
-  --color-surface: #1b222a;
-  --color-surface-2: #232c36;
-  --color-text: #eef2f6;
-  --color-text-muted: #b3bec9;
-  --color-border: #8b95a1;
-  --color-border-subtle: #33404b;
-  --color-link: #7fbaf5;
-  --color-primary: #7fbaf5;
-  --color-primary-strong: #a6cefb;
-  --color-on-primary: #0a0f14;
-  --color-danger: #ffb4a8;
-  --color-success: #7ddea8;
-  --color-focus-inner: #0a0f14;
-  --color-focus-outer: #bcd8f7;
+  --color-bg: #0d1011;
+  --color-surface: #151a1b;
+  --color-surface-2: #1e2526;
+  --color-text: #f5f7f7;
+  --color-text-muted: #b5bfbf;
+  --color-border: #86908f;
+  --color-border-subtle: #2b3334;
+  --color-link: #3fd2c4;
+  --color-primary: #3fd2c4;
+  --color-primary-strong: #8ae8de;
+  --color-on-primary: #03100f;
+  --color-danger: #ffad9f;
+  --color-success: #7fe08f;
+  --color-accent: #ff7f6a;
+  --color-accent-2: #f8c445;
+  --color-accent-strong: #ffa597;
+  --color-accent-subtle: #3b221e;
+  --color-focus-inner: #03100f;
+  --color-focus-outer: #9ff0e8;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
   --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
+  /* ダークでは低コントラストの拡散のみ（泥んだ黒帯にしない） */
+  --shadow-soft: 0 0.4rem 1.4rem rgb(0 0 0 / 28%), 0 0.12rem 0.4rem rgb(0 0 0 / 18%);
 }
 
 /* ダークモードの色 (OS 追従。ただし手動でライト指定時は適用しない) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #12171d;
-    --color-surface: #1b222a;
-    --color-surface-2: #232c36;
-    --color-text: #eef2f6;
-    --color-text-muted: #b3bec9;
-    --color-border: #8b95a1;
-    --color-border-subtle: #33404b;
-    --color-link: #7fbaf5;
-    --color-primary: #7fbaf5;
-    --color-primary-strong: #a6cefb;
-    --color-on-primary: #0a0f14;
-    --color-danger: #ffb4a8;
-    --color-success: #7ddea8;
-    --color-focus-inner: #0a0f14;
-    --color-focus-outer: #bcd8f7;
+    --color-bg: #0d1011;
+    --color-surface: #151a1b;
+    --color-surface-2: #1e2526;
+    --color-text: #f5f7f7;
+    --color-text-muted: #b5bfbf;
+    --color-border: #86908f;
+    --color-border-subtle: #2b3334;
+    --color-link: #3fd2c4;
+    --color-primary: #3fd2c4;
+    --color-primary-strong: #8ae8de;
+    --color-on-primary: #03100f;
+    --color-danger: #ffad9f;
+    --color-success: #7fe08f;
+    --color-accent: #ff7f6a;
+    --color-accent-2: #f8c445;
+    --color-accent-strong: #ffa597;
+    --color-accent-subtle: #3b221e;
+    --color-focus-inner: #03100f;
+    --color-focus-outer: #9ff0e8;
 
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 30%);
     --shadow-md: 0 8px 20px rgb(0 0 0 / 45%), 0 2px 6px rgb(0 0 0 / 35%);
+    --shadow-soft: 0 0.4rem 1.4rem rgb(0 0 0 / 28%), 0 0.12rem 0.4rem rgb(0 0 0 / 18%);
   }
 }
