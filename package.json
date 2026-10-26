@@ -21,7 +21,7 @@
     "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
-    "@fontsource/zen-kaku-gothic-new": "^5.3.1",
+    "@fontsource-variable/noto-sans-jp": "^5.3.1",
     "astro": "^7.4.2"
   },
   "devDependencies": {

@@ -6,9 +6,9 @@
 
 ## 2026-10-26 / サンセリフを Noto Sans JP Variable に変更する
 
-- **判断内容**：サイト全体のサンセリフを IBM Plex Sans JP から **Noto Sans JP Variable** へ変更。`@fontsource-variable/noto-sans-jp` でセルフホストする。CSS 上は 400 / 700 を引き続き指定する。
+- **判断内容**：サイト全体のサンセリフを IBM Plex Sans JP から **Noto Sans JP Variable** へ変更。`@fontsource-variable/noto-sans-jp` の `wght.css` をセルフホストする（latin / japanese 専用の CSS ファイルはパッケージに無い）。CSS 上の `font-weight: 400` / `700` は Variable の wght 軸（100–900）で引き続き効く。
 - **対応する達成基準**：見た目・ブランド（UI 達成基準の変更ではない）。コントラストは色トークン依存のためフォント差し替え単独では変えない。1.4.12 テキストの間隔は固定高さボックスを作らない既存方針を維持。
-- **選定理由**：Variable 版のためウェイト軸を1系統のファイルで扱える。日本語の可読性が高く癖が少ない。OFL-1.1 であり、ルートの MIT `LICENSE` の対象外（再ライセンスしない）。
+- **選定理由**：Variable 版のため全ウェイトを wght 軸で扱える。日本語の可読性が高く癖が少ない。OFL-1.1 であり、ルートの MIT `LICENSE` の対象外（再ライセンスしない）。
 - **検討した代替案と却下理由**：Zen Kaku Gothic New → 実表示で確認したが印象が合わなかった。M PLUS 2 → 字面がやや丸くカジュアル寄りでコーポレートの落ち着きが弱い。Zen Maru Gothic → 丸ゴシックで印象が柔らかすぎる。BIZ UDPGothic → 情報設計向けで堅実だが、求める方向とずれる。IBM Plex Sans JP 継続 → 硬さが残るため見送り。
 
 ## 2026-10-26 / 認証済み `/_astro/` に長期 Cache-Control を付ける
