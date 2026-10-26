@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-10-26 / サイトパレットを A1（Clean white）へ更新する
+
+- **判断内容**：`tokens.css` を案 A1 にする。近白背景・近黒文字・彩度の高い teal（ライトの link/primary は `#007370`）を主軸とし、coral / mustard は `--color-accent` / `--color-accent-2`（装飾専用）に抑える。文字用に `--color-accent-strong`、面用に `--color-accent-subtle`。ブランドドットとカード右上バーは残し、見出しの装飾下線は置かない。ヒーロー画像枠は `--shadow-soft` と細い `border-subtle`。`main` 内リンクの下線は維持。
+- **対応する達成基準**：1.4.3 コントラスト（最低限）AA / 1.4.11 非テキストのコントラスト AA（`scripts/contrast.mjs` で検証）。1.4.1 色の使用 A（アクセントは装飾のみ、リンクは下線を維持）。
+- **選定理由**：階層をはっきりさせ、暖色紙面の霞みを減らす一方で AA を保つ。
+- **検討した代替案と却下理由**：案 A（暖色紙面）継続 → 階層がぼやけるため A1 へ。アクセントを意味の識別に使う → 1.4.1 に抵触するため却下。見出しの装飾下線 → 安く見えるため削除。
+
 ## 2026-10-26 / OG 画像とファビコンを追加する
 
 - **判断内容**：`public/` に `favicon.svg` / `favicon.ico` / `apple-touch-icon.png`、`public/images/og-image.jpg` を置き、`BaseLayout` の `<head>` でアイコンリンクと OGP／Twitter Card メタを出力する。`og:image` は `Astro.site` 基準の絶対 URL。ページごとに `ogImage` prop で上書き可能とし、既定はこの JPG。ファビコンの塗りはパレット A1 の teal（`#007370`）。`theme-color` はライト／ダークの背景色（`#ffffff` / `#0d1011`）を `prefers-color-scheme` で切替。
