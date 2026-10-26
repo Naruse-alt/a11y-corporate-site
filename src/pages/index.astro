@@ -159,12 +159,30 @@ import { services } from '../data/services';
     font-size: var(--text-4xl);
   }
 
-  /* 装飾下線。意味は見出し本文が担い、色だけに依存しない (1.4.1) */
+  /*
+   * 装飾の手描きストローク (1.4.1: 意味は見出し本文が担う)。
+   * SVG は --color-accent と同色。mask だと文字も消えるため background-image を使う。
+   * 行分割時は box-decoration-break: clone で各行フラグメントに付く。
+   */
   .hero__emphasis {
-    text-decoration-line: underline;
-    text-decoration-color: var(--color-accent);
-    text-decoration-thickness: 0.18em;
-    text-underline-offset: 0.12em;
+    text-decoration: none;
+    padding-bottom: 0.18em;
+    background-image: url('/images/hero-emphasis-stroke.svg');
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% 0.38em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  :root[data-theme='dark'] .hero__emphasis {
+    background-image: url('/images/hero-emphasis-stroke-dark.svg');
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .hero__emphasis {
+      background-image: url('/images/hero-emphasis-stroke-dark.svg');
+    }
   }
 
   .hero__actions {
@@ -183,8 +201,7 @@ import { services } from '../data/services';
     border-radius: var(--radius-lg);
     background-color: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
-    /* 装飾オフセット。情報はイラスト自体が担う */
-    box-shadow: 0.4rem 0.4rem 0 var(--color-accent-subtle);
+    box-shadow: var(--shadow-soft);
     overflow: hidden;
   }
 
@@ -226,6 +243,15 @@ import { services } from '../data/services';
   @media (forced-colors: active) {
     .hero__visual {
       border-color: CanvasText;
+      box-shadow: none;
+    }
+
+    .hero__emphasis {
+      background-image: none;
+      text-decoration-line: underline;
+      text-decoration-color: CanvasText;
+      text-decoration-thickness: 0.12em;
+      text-underline-offset: 0.12em;
     }
   }
 </style>
