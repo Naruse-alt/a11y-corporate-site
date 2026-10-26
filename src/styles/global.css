@@ -78,20 +78,17 @@ main a {
 
 /*
  * フォーカスの可視化 (2.4.7 A)。
- * 二重アウトライン(内側=明色 / 外側=暗色)で、明背景・暗背景の双方に乗る。
- * outline を単独で消さず、必ず可視の代替表示を与える。
+ * 2.4.7 が求めるのはキーボード操作時の可視フォーカスであり、:focus-visible で満たす。
+ * 二重リング(内側=明色 / 外側=暗色)で明背景・暗背景の双方に乗る。
+ * 現行主要ブラウザは :focus-visible 対応済みのため、:focus フォールバックは置かない
+ * （:focus はマウスクリックでも付き、意図しない枠が出る）。
+ * outline をグローバルに消さない。
  */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-focus-inner);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--color-focus-outer);
   border-radius: var(--radius-sm);
-}
-
-/* focus-visible 非対応環境向けのフォールバック */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus {
-  outline: 2px solid var(--color-focus-outer);
-  outline-offset: 2px;
 }
 
 /*

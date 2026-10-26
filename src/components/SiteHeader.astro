@@ -211,6 +211,11 @@ const { path = '/' } = Astro.props as { path?: string };
     list-style: none;
   }
 
+  /*
+   * ナビはリンク一覧として文脈からリンクだとわかるため、通常時は下線なし。
+   * 色だけで情報を伝えることにはならず、1.4.1 の対象外。
+   * 本文（main）内のリンクは global.css で下線を維持する。
+   */
   .site-nav a {
     display: inline-flex;
     align-items: center;
@@ -220,7 +225,8 @@ const { path = '/' } = Astro.props as { path?: string };
     text-decoration: none;
   }
 
-  .site-nav a:hover {
+  .site-nav a:hover,
+  .site-nav a:focus-visible {
     text-decoration: underline;
   }
 
@@ -351,7 +357,8 @@ const { path = '/' } = Astro.props as { path?: string };
     border-radius: var(--radius);
   }
 
-  .drawer-nav a:hover {
+  .drawer-nav a:hover,
+  .drawer-nav a:focus-visible {
     text-decoration: underline;
   }
 
