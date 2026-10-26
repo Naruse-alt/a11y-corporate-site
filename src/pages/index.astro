@@ -32,16 +32,20 @@ import { services } from '../data/services';
       */}
       <div class="hero__visual">
         <picture>
+          {/* ヒーロー縦積みと同じ 40rem。正方形版で余白と転送量を抑える */}
           <source
+            media="(max-width: 40rem)"
             type="image/webp"
-            srcset="/images/hero-inclusive-web.webp"
+            srcset="/images/hero-inclusive-web-sp.webp"
+            width="800"
+            height="800"
           />
           <img
             class="hero__image"
-            src="/images/hero-inclusive-web.png"
+            src="/images/hero-inclusive-web.webp"
             width="1200"
             height="800"
-            alt="多様な人々がキーボードとブラウザ画面を囲み、アクセシブルな Web を協働して作るイラスト"
+            alt="車いすの人、白杖を持つ人、補聴器をつけた人、年配の人の4人が、ノートPCに映る Web ページを囲んで話し合っている手描きのイラスト"
             decoding="async"
             fetchpriority="high"
           />
@@ -184,6 +188,14 @@ import { services } from '../data/services';
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 3 / 2; /* 1200×800。CLS 防止。picture 切替時は下で上書き */
+    object-fit: cover;
+  }
+
+  @media (max-width: 40rem) {
+    .hero__image {
+      aspect-ratio: 1 / 1; /* 正方形 SP 版に合わせる */
+    }
   }
 
   /* わずかな浮遊。情報伝達ではなく存在感のため。reduced-motion で停止 */
