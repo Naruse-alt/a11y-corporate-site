@@ -7,7 +7,12 @@ import { services } from '../data/services';
 <BaseLayout
   title="ホーム"
   description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
+  fullBleedMain
 >
+  {/*
+    ヒーローは .container の外（fullBleedMain）で全幅にする。
+    100vw は縦スクロールバー幅を含むため横はみ出しの原因になるので使わない。
+  */}
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__grid">
       <div class="hero__body">
@@ -55,55 +60,57 @@ import { services } from '../data/services';
     </div>
   </section>
 
-  <section id="services" class="section" aria-labelledby="services-heading">
-    <div class="section__head">
-      <p class="eyebrow">Services</p>
-      <h2 id="services-heading">提供サービス</h2>
-      <p class="lead">診断から実装、運用・教育まで、アクセシビリティ対応を一貫して支援します。</p>
-    </div>
+  <div class="container">
+    <section id="services" class="section" aria-labelledby="services-heading">
+      <div class="section__head">
+        <p class="eyebrow">Services</p>
+        <h2 id="services-heading">提供サービス</h2>
+        <p class="lead">診断から実装、運用・教育まで、アクセシビリティ対応を一貫して支援します。</p>
+      </div>
 
-    <ul class="card-grid">
-      {
-        services.map((service, index) => (
-          <li class="card">
-            <span class="card__icon" aria-hidden="true">
-              {index === 0 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <circle cx="11" cy="11" r="7"></circle>
-                  <path d="M16.5 16.5 21 21"></path>
-                </svg>
-              )}
-              {index === 1 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M8 6 3 12l5 6"></path>
-                  <path d="M16 6l5 6-5 6"></path>
-                </svg>
-              )}
-              {index === 2 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
-                  <path d="M17 8h3v11H8"></path>
-                </svg>
-              )}
-            </span>
-            {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
-            <h3>
-              <a class="card__title-link link-quiet" href={`/services/#${service.id}`}>
-                {service.title}
-              </a>
-            </h3>
-            <p>{service.summary}</p>
-          </li>
-        ))
-      }
-    </ul>
+      <ul class="card-grid">
+        {
+          services.map((service, index) => (
+            <li class="card">
+              <span class="card__icon" aria-hidden="true">
+                {index === 0 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M16.5 16.5 21 21"></path>
+                  </svg>
+                )}
+                {index === 1 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M8 6 3 12l5 6"></path>
+                    <path d="M16 6l5 6-5 6"></path>
+                  </svg>
+                )}
+                {index === 2 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
+                    <path d="M17 8h3v11H8"></path>
+                  </svg>
+                )}
+              </span>
+              {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
+              <h3>
+                <a class="card__title-link link-quiet" href={`/services/#${service.id}`}>
+                  {service.title}
+                </a>
+              </h3>
+              <p>{service.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
 
-    <p class="services-more">
-      <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
-    </p>
-  </section>
+      <p class="services-more">
+        <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
+      </p>
+    </section>
 
-  <AnnotationCue topicId="home-hero" />
+    <AnnotationCue topicId="home-hero" />
+  </div>
 </BaseLayout>
 
 <style>
@@ -115,11 +122,14 @@ import { services } from '../data/services';
     position: relative;
     margin-block-start: var(--space-4);
     padding-block: clamp(var(--space-8), 4vw, var(--space-16));
-    padding-inline: 0;
+    /* 狭い幅は他セクションと同じ左右余白。全幅は親 main（container なし）に任せる */
+    padding-inline: var(--space-4);
     background-color: transparent;
     border: none;
     border-radius: 0;
     overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .hero__grid {
@@ -194,21 +204,18 @@ import { services } from '../data/services';
     }
   }
 
-  /* デスクトップ: 約 45:55、上下中央。イラストはビューポート右端まで */
+  /* デスクトップ: 約 45:55、上下中央。イラストはセクション（= レイアウト幅）右端まで */
   @media (min-width: 64rem) {
     .hero {
-      /* .container から全幅へ。右端まで伸ばし横スクロールは出さない */
-      width: 100vw;
-      max-width: 100vw;
-      margin-inline-start: calc(50% - 50vw);
-      margin-inline-end: 0;
-      box-sizing: border-box;
+      /*
+       * 100vw は使わない（縦スクロールバー幅を含み横はみ出しの原因）。
+       * 親 main が全幅なので width:100% で足りる。左だけ .container と揃える。
+       */
       padding-inline-start: max(
         var(--space-4),
-        calc((100vw - 72rem) / 2 + var(--space-4))
+        calc((100% - 72rem) / 2 + var(--space-4))
       );
       padding-inline-end: 0;
-      overflow-x: clip;
     }
 
     .hero__grid {
