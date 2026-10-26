@@ -19,12 +19,11 @@ const year = new Date().getFullYear();
     </div>
 
     <nav class="site-footer__nav" aria-label="フッターナビゲーション">
-      <h2 class="site-footer__heading">サイト内リンク</h2>
       <ul>
         {
           footerNavItems.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a class="link-quiet" href={item.href}>{item.label}</a>
             </li>
           ))
         }
@@ -68,14 +67,6 @@ const year = new Date().getFullYear();
     color: var(--color-text-muted);
   }
 
-  .site-footer__heading {
-    margin: 0 0 var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
-  }
-
   .site-footer__nav ul {
     display: flex;
     flex-direction: column;
@@ -85,6 +76,7 @@ const year = new Date().getFullYear();
     list-style: none;
   }
 
+  /* 下線の有無は global.css の .link-quiet に委ねる */
   .site-footer__nav a {
     display: inline-flex;
     align-items: center;
