@@ -277,6 +277,7 @@ body.is-drawer-open {
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -288,9 +289,35 @@ body.is-drawer-open {
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
+/* カード右上の装飾バー。色だけで種別を伝えない (1.4.1) */
+.card::before {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-end: var(--space-4);
+  inline-size: 1.25rem;
+  block-size: 0.35rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+}
+
+.card-grid > .card:nth-child(3n + 2)::before {
+  background-color: var(--color-accent-2);
+}
+
+.card-grid > .card:nth-child(3n + 3)::before {
+  background-color: var(--color-primary);
+}
+
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+@media (forced-colors: active) {
+  .card::before {
+    background-color: CanvasText;
+  }
 }
 
 .card h3 {

@@ -21,6 +21,8 @@ const { path = '/' } = Astro.props as { path?: string };
 <header class="site-header" data-site-header>
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
+      {/* 装飾ドット。意味は持たせず色だけに依存しない (1.4.1) */}
+      <span class="site-header__mark" aria-hidden="true"></span>
       <span class="site-header__wordmark">Inclusive&nbsp;Works</span>
     </a>
 
@@ -161,14 +163,29 @@ const { path = '/' } = Astro.props as { path?: string };
   .site-header__brand {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2);
     font-weight: 700;
     font-size: 1.125rem;
     color: var(--color-text);
     text-decoration: none;
   }
 
+  .site-header__mark {
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
   .site-header__brand:hover .site-header__wordmark {
     text-decoration: underline;
+  }
+
+  @media (forced-colors: active) {
+    .site-header__mark {
+      background-color: CanvasText;
+    }
   }
 
   .primary-nav {
