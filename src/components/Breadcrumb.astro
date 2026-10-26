@@ -19,7 +19,7 @@ const { items } = Astro.props as { items: readonly Crumb[] };
         return (
           <li>
             {item.href && !isLast ? (
-              <a href={item.href}>{item.label}</a>
+              <a class="link-quiet" href={item.href}>{item.label}</a>
             ) : (
               <span aria-current="page">{item.label}</span>
             )}
@@ -54,6 +54,10 @@ const { items } = Astro.props as { items: readonly Crumb[] };
     color: var(--color-text-muted);
   }
 
+  /*
+   * パンくずは順序リスト＋区切りでリンク一覧とわかるナビであり、
+   * 段落内のインラインリンクではない。.link-quiet で通常時下線なし。
+   */
   .breadcrumb a {
     color: var(--color-link);
   }
