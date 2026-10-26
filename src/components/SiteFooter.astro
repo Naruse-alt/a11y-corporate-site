@@ -19,7 +19,6 @@ const year = new Date().getFullYear();
     </div>
 
     <nav class="site-footer__nav" aria-label="フッターナビゲーション">
-      <h2 class="site-footer__heading">サイト内リンク</h2>
       <ul>
         {
           footerNavItems.map((item) => (
@@ -65,14 +64,6 @@ const year = new Date().getFullYear();
 
   .site-footer__note {
     margin: 0;
-    color: var(--color-text-muted);
-  }
-
-  .site-footer__heading {
-    margin: 0 0 var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: 700;
-    letter-spacing: 0.06em;
     color: var(--color-text-muted);
   }
 
