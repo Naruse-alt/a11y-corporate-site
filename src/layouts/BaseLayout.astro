@@ -12,7 +12,8 @@ interface Props {
   description?: string;
   /**
    * true のとき main から .container を外す。
-   * トップのヒーローなど、ビューポート全幅のセクションをページ側で置けるようにする。
+   * トップはヒーローを 80rem・本文セクションを 72rem と幅を分けるため、
+   * main 全体を 72rem で包まない（ページ側で幅を切り替える）。
    */
   fullBleedMain?: boolean;
   /** サイト相対パス。省略時は既定の OG 画像 */
