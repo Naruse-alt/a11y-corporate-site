@@ -154,11 +154,20 @@ body.is-drawer-open {
 }
 
 /* --- レイアウト --- */
+/*
+ * 内容幅を --container / --container-wide に揃え、左右余白は別途足す。
+ * max-width だけだと border-box でパディングが内容を削るため、
+ * width: min(100%, 内容幅 + 左右余白) とする。
+ */
 .container {
-  width: 100%;
-  max-width: 72rem;
+  width: min(100%, calc(var(--container) + 2 * var(--container-pad-inline)));
   margin-inline: auto;
-  padding-inline: var(--space-4);
+  padding-inline: var(--container-pad-inline);
+}
+
+/* ヘッダーとトップヒーロー用。本文・フッターより広い */
+.container--wide {
+  width: min(100%, calc(var(--container-wide) + 2 * var(--container-pad-inline)));
 }
 
 /* セクションの縦リズム */
