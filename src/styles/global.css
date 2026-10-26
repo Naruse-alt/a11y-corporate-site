@@ -71,9 +71,27 @@ a {
   color: var(--color-link);
 }
 
-/* 本文中リンクは下線必須。色だけで情報を伝えない (1.4.1 A) */
+/*
+ * 本文（main）内のインラインリンクは下線必須。色だけで情報を伝えない (1.4.1 A)。
+ * ナビ／目次／カード見出し／CTA など「配置でリンクだとわかる」ものは .link-quiet で外す。
+ */
 main a {
+  text-decoration: underline;
   text-underline-offset: 0.15em;
+}
+
+/*
+ * 静かなリンク（ナビ系・目次・カード見出し・単独 CTA）。
+ * 見出し付き一覧やボタン風の見た目でリンクだとわかるため、通常時は下線なし。
+ * 1.4.1 の「色のみ」には当たらない。本文の段落内リンクには使わない。
+ */
+.link-quiet {
+  text-decoration: none;
+}
+
+.link-quiet:hover,
+.link-quiet:focus-visible {
+  text-decoration: underline;
 }
 
 /*

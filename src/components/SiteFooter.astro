@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
         {
           footerNavItems.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a class="link-quiet" href={item.href}>{item.label}</a>
             </li>
           ))
         }
@@ -85,22 +85,12 @@ const year = new Date().getFullYear();
     list-style: none;
   }
 
-  /*
-   * ナビは見出し付きのリンク一覧で、文脈からリンクだとわかる。
-   * 色だけで情報を伝えることにはならず、1.4.1 の対象外。
-   * 本文（main）内のリンクは global.css で下線を維持する。
-   */
+  /* 下線の有無は global.css の .link-quiet に委ねる */
   .site-footer__nav a {
     display: inline-flex;
     align-items: center;
     min-height: var(--target-min);
     color: var(--color-link);
-    text-decoration: none;
-  }
-
-  .site-footer__nav a:hover,
-  .site-footer__nav a:focus-visible {
-    text-decoration: underline;
   }
 
   .site-footer__bar {
