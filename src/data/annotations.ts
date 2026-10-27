@@ -123,9 +123,9 @@ export const annotationGroups: readonly AnnotationGroup[] = [
         demoHref: '/contact/',
         demoLabel: 'お問い合わせを見る',
         summary:
-          '実送信は行わず、ラベル関連付け・autocomplete・必須の文言明示・エラー特定／修正提案・成功時のライブリージョン・入力保持を見せ場にしています。',
+          '架空の会社のため実送信・実連絡はできません。ラベル関連付け・autocomplete・必須の文言明示・エラー特定／修正提案・成功時のライブリージョン・入力保持を見せ場にしています。',
         criteria: ['1.3.5', '3.3.1', '3.3.2', '3.3.3', '3.3.7'],
-        avoided: '受信サーバー導入や mailto 依存は、今回の見せ場の本質ではないため見送り。',
+        avoided: '受信サーバー導入や mailto による連絡先掲示は、誤解・誤送信のリスクがあるため採用しない。',
       },
       {
         id: 'about-policy',
