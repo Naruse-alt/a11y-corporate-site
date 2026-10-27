@@ -470,8 +470,8 @@ textarea.form__control {
 
 /*
  * フォーム全体の通知。
- * フォーカス可能な見出しとして使い、送信後にフォーカスを移す (3.3.1)。
- * aria-live はスクリプト側で必要時のみ付与し、乱用しない。
+ * エラーは role="alert"、成功は role="status" を初期 HTML に置き、内容だけ差し替える。
+ * 成功時は領域へフォーカスを移す (3.3.1)。汎用 div への aria-labelledby は付けない。
  */
 .form__status {
   margin: 0;

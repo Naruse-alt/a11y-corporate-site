@@ -9,7 +9,9 @@
  * ARIA について:
  *   - aria-invalid / aria-describedby はネイティブだけでは「どのエラーか」を
  *     プログラム的に結びつけられないため付与する。
- *   - aria-live はステータス領域1か所のみ（乱用しない）。
+ *   - エラー用 role="alert" と成功用 role="status" を初期 HTML に置き、
+ *     内容の差し替えだけにする（注入と同時の aria-live 付与だと読み上げ漏れうる）。
+ *   - 汎用 div に aria-labelledby は付けない（ARIA 1.2 で名前付け禁止）。
  *   - 成功後は入力値を残す（3.3.7 冗長な入力 A）。
  */
 const topics = [
@@ -28,16 +30,24 @@ const topics = [
   </p>
 
   {/*
-    ステータス領域。初期は空。
-    エラー時・成功時に内容を入れ、フォーカスを移す。
-    aria-live はスクリプトが必要時に付与する。
+    ライブリージョンは初期から role 付きで置く。
+    内容はスクリプトで差し替え、hidden の付け外しだけ行う。
   */}
   <div
-    class="form__status"
-    id="contact-status"
+    class="form__status form__status--error"
+    id="contact-error-status"
+    role="alert"
     tabindex="-1"
     hidden
-    data-contact-status
+    data-contact-error-status
+  ></div>
+  <div
+    class="form__status form__status--success"
+    id="contact-success-status"
+    role="status"
+    tabindex="-1"
+    hidden
+    data-contact-success-status
   ></div>
 
   <div class="form__field">
@@ -136,8 +146,9 @@ const topics = [
 <script>
   // クライアント検証デモ。送信は行わない。
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
-  const statusEl = document.querySelector<HTMLElement>('[data-contact-status]');
-  if (!form || !statusEl) {
+  const errorStatusEl = document.querySelector<HTMLElement>('[data-contact-error-status]');
+  const successStatusEl = document.querySelector<HTMLElement>('[data-contact-success-status]');
+  if (!form || !errorStatusEl || !successStatusEl) {
     // フォームが無いページでは何もしない
   } else {
     type FieldName = 'name' | 'email' | 'topic' | 'message';
@@ -161,6 +172,13 @@ const topics = [
       email: form.querySelector('[data-error-for="email"]') as HTMLElement,
       topic: form.querySelector('[data-error-for="topic"]') as HTMLElement,
       message: form.querySelector('[data-error-for="message"]') as HTMLElement,
+    };
+
+    const clearStatusRegions = (): void => {
+      errorStatusEl.hidden = true;
+      errorStatusEl.innerHTML = '';
+      successStatusEl.hidden = true;
+      successStatusEl.innerHTML = '';
     };
 
     const clearErrors = (): void => {
@@ -233,32 +251,30 @@ const topics = [
         })
         .join('');
 
-      statusEl.hidden = false;
-      statusEl.className = 'form__status form__status--error';
-      // 件数通知用。フォーカスは先頭エラー項目へ移す (forms.mdc)
-      statusEl.setAttribute('aria-live', 'assertive');
-      statusEl.innerHTML = `
-        <p class="form__status-title" id="contact-status-title">入力内容を修正してください</p>
+      clearStatusRegions();
+      // role="alert" は初期 HTML にある。内容差し替えのみ（件数通知用）。
+      // フォーカスは先頭エラー項目へ移す (forms.mdc)
+      errorStatusEl.innerHTML = `
+        <p class="form__status-title">入力内容を修正してください</p>
         <p>${errors.length}件のエラーがあります。リンク先の項目を修正してください。</p>
         <ul class="form__status-list">${items}</ul>
       `;
-      statusEl.setAttribute('aria-labelledby', 'contact-status-title');
+      errorStatusEl.hidden = false;
       fieldEls[errors[0].field].focus();
     };
 
     const showSuccessStatus = (): void => {
-      statusEl.hidden = false;
-      statusEl.className = 'form__status form__status--success';
-      statusEl.setAttribute('aria-live', 'polite');
-      statusEl.innerHTML = `
-        <p class="form__status-title" id="contact-status-title">デモ送信が完了しました</p>
+      clearStatusRegions();
+      // role="status" は初期 HTML にある。内容差し替えのみ。
+      successStatusEl.innerHTML = `
+        <p class="form__status-title">デモ送信が完了しました</p>
         <p>
           入力内容の検証は問題ありませんでした。このデモでは外部への送信は行っていません。
           入力内容はそのまま残してあります（再入力の必要はありません）。
         </p>
       `;
-      statusEl.setAttribute('aria-labelledby', 'contact-status-title');
-      statusEl.focus();
+      successStatusEl.hidden = false;
+      successStatusEl.focus();
     };
 
     const labelFor = (field: FieldName): string => {
@@ -289,7 +305,6 @@ const topics = [
       if (errors.length > 0) {
         errors.forEach((err) => showFieldError(err.field, err.message));
         showErrorStatus(errors);
-        // ステータスへフォーカスしたうえで、続けて先頭エラーにも到達できるよう一覧リンクを用意
         return;
       }
 
