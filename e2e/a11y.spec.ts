@@ -183,6 +183,20 @@ test.describe('お問い合わせフォーム', () => {
     await expect(error).toBeVisible();
     await expect(error).not.toBeEmpty();
   });
+
+  test('ステータス用ライブリージョンが初期 DOM にある', async ({ page }) => {
+    // 守る基準: 4.1.2 名前・役割・値 A（ライブリージョンの契約）
+    // 理由: role を内容注入と同時に付けると読み上げ漏れうるため、初期から置く。
+    await page.goto('/contact/');
+
+    const alertRegion = page.locator('[data-contact-error-status]');
+    const statusRegion = page.locator('[data-contact-success-status]');
+
+    await expect(alertRegion).toHaveAttribute('role', 'alert');
+    await expect(statusRegion).toHaveAttribute('role', 'status');
+    await expect(alertRegion).toBeHidden();
+    await expect(statusRegion).toBeHidden();
+  });
 });
 
 function formatViolations(
