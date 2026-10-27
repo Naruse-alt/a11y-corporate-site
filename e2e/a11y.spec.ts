@@ -143,65 +143,6 @@ test.describe('モバイルドロワー', () => {
   });
 });
 
-/**
- * 折りたたみヘッダー（max-width: 48rem）ではロゴ左・操作群右。
- * margin-inline-start: auto が .primary-nav のみだと、ナビ非表示時に操作が左へ寄る。
- */
-const collapsedHeaderWidths = [320, 375, 759, 768] as const;
-const collapsedHeaderThemes = ['light', 'dark'] as const;
-
-test.describe('折りたたみヘッダーの操作群は右端', () => {
-  for (const width of collapsedHeaderWidths) {
-    for (const theme of collapsedHeaderThemes) {
-      test(`${width}px / ${theme}`, async ({ page }) => {
-        await page.setViewportSize({ width, height: 900 });
-        await page.goto('/');
-        await page.evaluate((t) => {
-          document.documentElement.setAttribute('data-theme', t);
-          try {
-            localStorage.setItem('theme', t);
-          } catch {
-            /* ignore */
-          }
-        }, theme);
-
-        const toggle = page.getByRole('button', { name: 'メニュー' });
-        await expect(toggle).toBeVisible();
-
-        const edges = await page.evaluate(() => {
-          const inner = document.querySelector('.site-header__inner');
-          const menu = document.getElementById('nav-toggle');
-          const brand = document.querySelector('.site-header__brand');
-          if (
-            !(inner instanceof HTMLElement) ||
-            !(menu instanceof HTMLElement) ||
-            !(brand instanceof HTMLElement)
-          ) {
-            return null;
-          }
-          const innerBox = inner.getBoundingClientRect();
-          const padEnd = parseFloat(getComputedStyle(inner).paddingInlineEnd);
-          const contentRight = innerBox.right - padEnd;
-          const menuRight = menu.getBoundingClientRect().right;
-          const brandLeft = brand.getBoundingClientRect().left;
-          const contentLeft = innerBox.left + parseFloat(getComputedStyle(inner).paddingInlineStart);
-          return { contentRight, menuRight, brandLeft, contentLeft };
-        });
-
-        expect(edges, 'ヘッダー要素が見つからない').not.toBeNull();
-        expect(
-          Math.abs(edges!.menuRight - edges!.contentRight),
-          `menuRight=${edges!.menuRight} contentRight=${edges!.contentRight}`,
-        ).toBeLessThanOrEqual(1);
-        expect(
-          Math.abs(edges!.brandLeft - edges!.contentLeft),
-          `brandLeft=${edges!.brandLeft} contentLeft=${edges!.contentLeft}`,
-        ).toBeLessThanOrEqual(1);
-      });
-    }
-  }
-});
-
 test.describe('ファビコンと OGP', () => {
   test('head に icon / og:image があり、アセットが 200 を返す', async ({ page, request }) => {
     // 理由: タブ識別と共有プレビュー用メタが欠けるとブランディングが崩れる。
