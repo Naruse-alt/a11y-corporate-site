@@ -12,6 +12,8 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": true
+    "run_worker_first": true,
+    // 未知 URL は dist/404.html を HTTP 404 で返す（Cloudflare 既定の汎用 404 を使わない）
+    "not_found_handling": "404-page"
   }
 }
