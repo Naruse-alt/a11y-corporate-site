@@ -369,6 +369,13 @@ const { path = '/' } = Astro.props as { path?: string };
     [data-nav-enhanced] .primary-nav {
       display: none;
     }
+    /*
+     * インラインナビ非表示時は auto マージンの担い手が消えるため、
+     * 操作群（テーマ切替・メニュー）をコンテナ右端へ送る。
+     */
+    [data-nav-enhanced] .site-header__actions {
+      margin-inline-start: auto;
+    }
   }
 
   @media (min-width: 48.0625rem) {
