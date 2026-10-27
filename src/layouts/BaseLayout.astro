@@ -18,6 +18,11 @@ interface Props {
   fullBleedMain?: boolean;
   /** サイト相対パス。省略時は既定の OG 画像 */
   ogImage?: string;
+  /**
+   * false のときパンくずを出さない。
+   * 404 はビルド時パスが /404 になり「現在地」が不自然なため省略する。
+   */
+  showBreadcrumb?: boolean;
 }
 
 interface Crumb {
@@ -30,14 +35,17 @@ const {
   description,
   fullBleedMain = false,
   ogImage = '/images/og-image.jpg',
+  showBreadcrumb = true,
 } = Astro.props;
 const path = Astro.url.pathname;
 const fullTitle = `${title} | Inclusive Works`;
 
-// トップページ以外はパンくずを表示する。
+// トップページ以外はパンくずを表示する（showBreadcrumb で抑制可）。
 // 現在地ラベルはページの title をそのまま使うため、ページ側の追記は不要。
 const breadcrumbs: Crumb[] | null =
-  path === '/' ? null : [{ href: '/', label: 'ホーム' }, { label: title }];
+  !showBreadcrumb || path === '/'
+    ? null
+    : [{ href: '/', label: 'ホーム' }, { label: title }];
 
 // site は astro.config の絶対 URL。canonical / og:image に使う。
 const site = Astro.site ?? new URL('https://a11y-corporate-site.naruse-works.workers.dev');

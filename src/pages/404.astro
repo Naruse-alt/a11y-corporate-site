@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/*
+ * カスタム 404。
+ * wrangler.jsonc の assets.not_found_handling = "404-page" により、
+ * 未知 URL ではこのページ（dist/404.html）が HTTP 404 で返る。
+ * パンくずはビルド時パスが /404 になり不自然なため出さない。
+ */
+---
+
+<BaseLayout
+  title="ページが見つかりません"
+  description="お探しのページは見つかりませんでした。トップページから再度お探しください。"
+  showBreadcrumb={false}
+>
+  <article class="not-found">
+    <h1>ページが見つかりません</h1>
+    <p>
+      お探しのページは存在しないか、移動した可能性があります。
+      お手数ですが、トップページから目的のページをお探しください。
+    </p>
+    <p>
+      <a class="button" href="/">トップページへ戻る</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .not-found {
+    max-width: var(--measure);
+  }
+
+  .not-found h1 {
+    font-size: var(--text-3xl);
+    margin-block-end: var(--space-4);
+  }
+
+  .not-found p {
+    margin-block: 0 var(--space-4);
+  }
+</style>
