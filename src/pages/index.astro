@@ -7,154 +7,193 @@ import { services } from '../data/services';
 <BaseLayout
   title="ホーム"
   description="Web アクセシビリティ対応を強みとする架空企業 Inclusive Works のコーポレートサイト。WCAG 2.2 レベル AA の達成を目標とします。"
+  fullBleedMain
 >
+  {/*
+    ヒーローは .container--wide（80rem）。本文セクションは .container（72rem）。
+    100vw は使わない（縦スクロールバー幅による横はみ出しを避ける）。
+  */}
   <section class="hero" aria-labelledby="hero-heading">
-    {/* 装飾。情報を持たないため aria-hidden。 */}
-    <span class="hero__decoration" aria-hidden="true"></span>
+    <div class="container container--wide hero__frame">
+      <div class="hero__grid">
+        <div class="hero__body">
+          <p class="eyebrow">Web アクセシビリティ</p>
+          {/*
+            3句を span.hero__phrase（display:block）で区切る。
+            通常幅では常に「誰も取り残さない / Web を、 / 標準の力で。」の3行。
+            拡大時は句内で折り返してよい（横はみ出しは不可）。
+            中身はテキストのみの span なので、アクセシブルネームは1つの見出しとして連結される。
+          */}
+          <h1 id="hero-heading">
+            <span class="hero__phrase">誰も取り残さない</span>
+            <span class="hero__phrase">Web を、</span>
+            <span class="hero__phrase">標準の力で。</span>
+          </h1>
+          <p class="lead">
+            Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
+            WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
+          </p>
+          <p class="hero__actions">
+            <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
+            <a class="button button--ghost" href="/services/">提供サービスを見る</a>
+          </p>
+        </div>
 
-    <div class="hero__grid">
-      <div class="hero__body">
-        <p class="eyebrow">Web アクセシビリティ</p>
-        <h1 id="hero-heading">誰も取り残さない Web を、標準の力で。</h1>
-        <p class="lead">
-          Inclusive Works は Web アクセシビリティ対応を強みとする制作会社です。
-          WCAG 2.2 レベル AA の達成を目標とし、試験結果を公開します。
-        </p>
-        <p class="hero__actions">
-          <a class="button" href="/accessibility/">アクセシビリティ方針を読む</a>
-          <a class="button button--ghost" href="/services/">提供サービスを見る</a>
-        </p>
-      </div>
-
-      {/*
-        右カラムのイラスト。雰囲気を伝える補助なので、短い代替テキストに留める。
-        ページの主張は見出し・リードが担う（1.1.1）。
-      */}
-      <div class="hero__visual">
-        <picture>
-          {/* ヒーロー縦積みと同じ 40rem。正方形版で余白と転送量を抑える */}
-          <source
-            media="(max-width: 40rem)"
-            type="image/webp"
-            srcset="/images/hero-inclusive-web-sp.webp"
-            width="800"
-            height="800"
-          />
-          <img
-            class="hero__image"
-            src="/images/hero-inclusive-web.webp"
-            width="1200"
-            height="800"
-            alt="車いすの人、白杖を持つ人、補聴器をつけた人、年配の人の4人が、ノートPCに映る Web ページを囲んで話し合っている手描きのイラスト"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </picture>
+        {/*
+          右カラムのイラスト。雰囲気を伝える補助なので、短い代替テキストに留める。
+          ページの主張は見出し・リードが担う（1.1.1）。
+        */}
+        <div class="hero__visual">
+          <picture>
+            {/* ヒーロー縦積みと同じ 40rem。正方形版で余白と転送量を抑える */}
+            <source
+              media="(max-width: 40rem)"
+              type="image/webp"
+              srcset="/images/hero-inclusive-web-sp.webp"
+              width="800"
+              height="800"
+            />
+            <img
+              class="hero__image"
+              src="/images/hero-inclusive-web.webp"
+              width="1200"
+              height="800"
+              alt="車いすの人、白杖を持つ人、補聴器をつけた人、年配の人の4人が、ノートPCに映る Web ページを囲んで話し合っている手描きのイラスト"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="services" class="section" aria-labelledby="services-heading">
-    <div class="section__head">
-      <p class="eyebrow">Services</p>
-      <h2 id="services-heading">提供サービス</h2>
-      <p class="lead">診断から実装、運用・教育まで、アクセシビリティ対応を一貫して支援します。</p>
-    </div>
+  <div class="container">
+    <section id="services" class="section" aria-labelledby="services-heading">
+      <div class="section__head">
+        <p class="eyebrow">Services</p>
+        <h2 id="services-heading">提供サービス</h2>
+        <p class="lead">診断から実装、運用・教育まで、アクセシビリティ対応を一貫して支援します。</p>
+      </div>
 
-    <ul class="card-grid">
-      {
-        services.map((service, index) => (
-          <li class="card">
-            <span class="card__icon" aria-hidden="true">
-              {index === 0 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <circle cx="11" cy="11" r="7"></circle>
-                  <path d="M16.5 16.5 21 21"></path>
-                </svg>
-              )}
-              {index === 1 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M8 6 3 12l5 6"></path>
-                  <path d="M16 6l5 6-5 6"></path>
-                </svg>
-              )}
-              {index === 2 && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
-                  <path d="M17 8h3v11H8"></path>
-                </svg>
-              )}
-            </span>
-            {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
-            <h3>
-              <a class="card__title-link link-quiet" href={`/services/#${service.id}`}>
-                {service.title}
-              </a>
-            </h3>
-            <p>{service.summary}</p>
-          </li>
-        ))
-      }
-    </ul>
+      <ul class="card-grid">
+        {
+          services.map((service, index) => (
+            <li class="card">
+              <span class="card__icon" aria-hidden="true">
+                {index === 0 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M16.5 16.5 21 21"></path>
+                  </svg>
+                )}
+                {index === 1 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M8 6 3 12l5 6"></path>
+                    <path d="M16 6l5 6-5 6"></path>
+                  </svg>
+                )}
+                {index === 2 && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"></path>
+                    <path d="M17 8h3v11H8"></path>
+                  </svg>
+                )}
+              </span>
+              {/* リンクテキストはサービス名そのもの。「詳しくはこちら」は使わない (2.4.4 / 2.4.6) */}
+              <h3>
+                <a class="card__title-link link-quiet" href={`/services/#${service.id}`}>
+                  {service.title}
+                </a>
+              </h3>
+              <p>{service.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
 
-    <p class="services-more">
-      <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
-    </p>
-  </section>
+      <p class="services-more">
+        <a class="button button--ghost" href="/services/">サービスの詳細を見る</a>
+      </p>
+    </section>
 
-  <AnnotationCue topicId="home-hero" />
+    <AnnotationCue topicId="home-hero" />
+  </div>
 </BaseLayout>
 
 <style>
+  /*
+   * レイアウト H1（枠なし）。ライトでは白地にイラストを直接置く。
+   * DOM 順は本文→ビジュアル。狭い幅は grid-area だけで画像を上に見せる。
+   * 幅は .container--wide（80rem）。画面端までは伸ばさない。
+   */
   .hero {
     position: relative;
     margin-block-start: var(--space-4);
-    padding: clamp(var(--space-8), 5vw, var(--space-16)) clamp(var(--space-4), 4vw, var(--space-12));
-    background-color: color-mix(in srgb, var(--color-primary) 7%, var(--color-bg));
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+    padding-block: clamp(var(--space-8), 4vw, var(--space-16));
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .hero__decoration {
-    position: absolute;
-    inset-block-start: -6rem;
-    inset-inline-end: -4rem;
-    inline-size: 18rem;
-    block-size: 18rem;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at center,
-      color-mix(in srgb, var(--color-primary) 16%, transparent),
-      transparent 70%
-    );
-    pointer-events: none;
-  }
-
-  /* 二分割。DOM 順は本文→ビジュアル。
-   * デスクトップ既定で横並びとし、狭い幅だけ縦積みにする。
-   * （min-width: 48rem だと OS 拡大／ブラウザズームで PC でも縦積みになりやすい） */
   .hero__grid {
-    position: relative;
     display: grid;
-    gap: var(--space-6) var(--space-8);
+    gap: var(--space-8);
     align-items: start;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  }
-
-  @media (max-width: 40rem) {
-    .hero__grid {
-      grid-template-columns: 1fr;
-    }
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'visual'
+      'body';
   }
 
   .hero__body {
+    grid-area: body;
     min-width: 0;
     max-width: 36rem;
+    /* h1 を列幅に合わせて縮める（コンテナクエリ） */
+    container-type: inline-size;
+    container-name: hero-body;
   }
 
+  .hero__visual {
+    grid-area: visual;
+    min-width: 0;
+    justify-self: stretch;
+    inline-size: 100%;
+    max-inline-size: none;
+    /* ライト: 枠なし。ダークは下で面・枠・影を付ける */
+    border-radius: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  /*
+   * 太字で約 8em 幅の「誰も取り残さない」が列に収まるよう、
+   * preferred を min(12cqi, 100cqi/8.4) にする（余白込みの安全係数 8.4）。
+   * 下限は 320px 幅でも句内折り返しを強制しない値。句は .hero__phrase で行分割。
+   */
   .hero h1 {
-    font-size: var(--text-4xl);
+    font-size: clamp(1.75rem, min(12cqi, calc(100cqi / 8.4)), 4.25rem);
+    line-height: var(--leading-tight);
+    word-break: keep-all;
+    /* グローバルの text-wrap: balance だと意図しない折り返しになるため解除 */
+    text-wrap: wrap;
+  }
+
+  /* 句ごとに1行。200%/400% 拡大で句が列幅を超えるときだけ句内折り返し (1.4.10) */
+  .hero__phrase {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+
+  .hero .lead {
+    font-size: max(1rem, var(--text-lg));
+    max-width: 35em; /* 全角 35 字相当を上限 */
   }
 
   .hero__actions {
@@ -163,25 +202,6 @@ import { services } from '../data/services';
     gap: var(--space-3);
     margin-block-start: var(--space-8);
     max-width: none;
-  }
-
-  .hero__visual {
-    min-width: 0;
-    justify-self: stretch;
-    inline-size: 100%;
-    max-inline-size: 32rem;
-    border-radius: var(--radius-lg);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border-subtle);
-    box-shadow: var(--shadow-soft);
-    overflow: hidden;
-  }
-
-  @media (max-width: 40rem) {
-    .hero__visual {
-      justify-self: center;
-      max-inline-size: min(100%, 28rem);
-    }
   }
 
   .hero__image {
@@ -195,6 +215,43 @@ import { services } from '../data/services';
   @media (max-width: 40rem) {
     .hero__image {
       aspect-ratio: 1 / 1; /* 正方形 SP 版に合わせる */
+    }
+  }
+
+  /* デスクトップ: gap を除き 9:11（約 45:55）、上下中央。画像は wide コンテナ右端まで */
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-areas: 'body visual';
+      grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .hero__body {
+      max-width: none;
+    }
+
+    .hero__visual {
+      justify-self: stretch;
+    }
+  }
+
+  /* ダーク: 白イラストが浮かないよう面・枠・拡散影を残す */
+  :root[data-theme='dark'] .hero__visual {
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .hero__visual {
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
     }
   }
 
@@ -214,7 +271,7 @@ import { services } from '../data/services';
 
   @media (forced-colors: active) {
     .hero__visual {
-      border-color: CanvasText;
+      border: 1px solid CanvasText;
       box-shadow: none;
     }
   }

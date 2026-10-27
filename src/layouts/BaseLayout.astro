@@ -10,6 +10,12 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 interface Props {
   title: string;
   description?: string;
+  /**
+   * true のとき main から .container を外す。
+   * トップはヒーローを 80rem・本文セクションを 72rem と幅を分けるため、
+   * main 全体を 72rem で包まない（ページ側で幅を切り替える）。
+   */
+  fullBleedMain?: boolean;
   /** サイト相対パス。省略時は既定の OG 画像 */
   ogImage?: string;
 }
@@ -19,7 +25,12 @@ interface Crumb {
   label: string;
 }
 
-const { title, description, ogImage = '/images/og-image.jpg' } = Astro.props;
+const {
+  title,
+  description,
+  fullBleedMain = false,
+  ogImage = '/images/og-image.jpg',
+} = Astro.props;
 const path = Astro.url.pathname;
 const fullTitle = `${title} | Inclusive Works`;
 
@@ -91,7 +102,11 @@ const ogImageAlt =
       フォーカス可能である必要がある（tabindex="-1"。正の値は使わない）。
       2.4.1 ブロックスキップ A / 2.4.3 フォーカス順序 A
     */}
-    <main id="main" class="container main-content" tabindex="-1">
+    <main
+      id="main"
+      class:list={['main-content', { container: !fullBleedMain }]}
+      tabindex="-1"
+    >
       {breadcrumbs && <Breadcrumb items={breadcrumbs} />}
       <slot />
     </main>

@@ -70,6 +70,12 @@
   --line-height-base: 1.75;
   --measure: 42rem; /* 本文の最適な行長 */
 
+  /* レイアウト幅。ヘッダー／ヒーローは wide、本文・フッターは通常 */
+  --container: 72rem;
+  --container-wide: 80rem;
+  /* 狭い画面で窮屈にならない左右余白。画面端への貼り付きも防ぐ */
+  --container-pad-inline: clamp(1rem, 4vw, 2.5rem);
+
   /* ターゲットサイズの基準 (2.5.8 AA)。本サイトは 44px を基準とする。 */
   --target-min: 44px;
 
