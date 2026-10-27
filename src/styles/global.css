@@ -71,27 +71,42 @@ a {
   color: var(--color-link);
 }
 
-/* 本文中リンクは下線必須。色だけで情報を伝えない (1.4.1 A) */
+/*
+ * 本文（main）内のインラインリンクは下線必須。色だけで情報を伝えない (1.4.1 A)。
+ * ナビ／目次／カード見出し／CTA など「配置でリンクだとわかる」ものは .link-quiet で外す。
+ */
 main a {
+  text-decoration: underline;
   text-underline-offset: 0.15em;
 }
 
 /*
+ * 静かなリンク（ナビ系・目次・カード見出し・単独 CTA）。
+ * 見出し付き一覧やボタン風の見た目でリンクだとわかるため、通常時は下線なし。
+ * 1.4.1 の「色のみ」には当たらない。本文の段落内リンクには使わない。
+ */
+.link-quiet {
+  text-decoration: none;
+}
+
+.link-quiet:hover,
+.link-quiet:focus-visible {
+  text-decoration: underline;
+}
+
+/*
  * フォーカスの可視化 (2.4.7 A)。
- * 二重アウトライン(内側=明色 / 外側=暗色)で、明背景・暗背景の双方に乗る。
- * outline を単独で消さず、必ず可視の代替表示を与える。
+ * 2.4.7 が求めるのはキーボード操作時の可視フォーカスであり、:focus-visible で満たす。
+ * 二重リング(内側=明色 / 外側=暗色)で明背景・暗背景の双方に乗る。
+ * 現行主要ブラウザは :focus-visible 対応済みのため、:focus フォールバックは置かない
+ * （:focus はマウスクリックでも付き、意図しない枠が出る）。
+ * outline をグローバルに消さない。
  */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-focus-inner);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--color-focus-outer);
   border-radius: var(--radius-sm);
-}
-
-/* focus-visible 非対応環境向けのフォールバック */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus {
-  outline: 2px solid var(--color-focus-outer);
-  outline-offset: 2px;
 }
 
 /*
@@ -139,11 +154,20 @@ body.is-drawer-open {
 }
 
 /* --- レイアウト --- */
+/*
+ * 内容幅を --container / --container-wide に揃え、左右余白は別途足す。
+ * max-width だけだと border-box でパディングが内容を削るため、
+ * width: min(100%, 内容幅 + 左右余白) とする。
+ */
 .container {
-  width: 100%;
-  max-width: 72rem;
+  width: min(100%, calc(var(--container) + 2 * var(--container-pad-inline)));
   margin-inline: auto;
-  padding-inline: var(--space-4);
+  padding-inline: var(--container-pad-inline);
+}
+
+/* ヘッダーとトップヒーロー用。本文・フッターより広い */
+.container--wide {
+  width: min(100%, calc(var(--container-wide) + 2 * var(--container-pad-inline)));
 }
 
 /* セクションの縦リズム */
@@ -262,6 +286,7 @@ body.is-drawer-open {
 }
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -273,9 +298,35 @@ body.is-drawer-open {
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
+/* カード右上の装飾バー。色だけで種別を伝えない (1.4.1) */
+.card::before {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-end: var(--space-4);
+  inline-size: 1.25rem;
+  block-size: 0.35rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+}
+
+.card-grid > .card:nth-child(3n + 2)::before {
+  background-color: var(--color-accent-2);
+}
+
+.card-grid > .card:nth-child(3n + 3)::before {
+  background-color: var(--color-primary);
+}
+
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+@media (forced-colors: active) {
+  .card::before {
+    background-color: CanvasText;
+  }
 }
 
 .card h3 {

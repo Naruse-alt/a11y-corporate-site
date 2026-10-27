@@ -13,6 +13,8 @@
  */
 
 import { unauthorizedResponse, verifyBasicAuth } from './auth.js';
+import { cacheControlForAuthenticatedPath } from './cache-control.js';
+import { applySecurityHeaders } from './security-headers.js';
 
 /**
  * @param {Request} request
@@ -42,9 +44,12 @@ async function handleRequest(request, env) {
 
   const response = await env.ASSETS.fetch(request);
 
-  // 認証済み応答が共有キャッシュに載らないようにする。
-  const headers = new Headers(response.headers);
-  headers.set('Cache-Control', 'private, no-store');
+  // Cache-Control はパスで分岐（/_astro/ のみ長期。それ以外は no-store）。
+  // セキュリティヘッダーは _headers ではなく Worker で付与（401 も含め確実に）。
+  const pathname = new URL(request.url).pathname;
+  let headers = new Headers(response.headers);
+  headers.set('Cache-Control', cacheControlForAuthenticatedPath(pathname));
+  headers = applySecurityHeaders(headers);
 
   return new Response(response.body, {
     status: response.status,

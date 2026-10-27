@@ -1,4 +1,4 @@
-# PR と main への push で型・ビルド・コントラストを自動検証する。
+# PR と main への push で型・ビルド・コントラスト・E2E を自動検証する。
 # デプロイやシークレット依存のステップは含めない（品質ゲートのみ）。
 name: CI
 
@@ -7,6 +7,10 @@ on:
   push:
     branches:
       - main
+
+# 既定で書き込み権限を与えない（供給チェーン対策）
+permissions:
+  contents: read
 
 # 同じ PR / ブランチの古い実行は打ち切り、最新だけ残す
 concurrency:
@@ -18,11 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      # .nvmrc（22）に合わせ、engines.node >=22 とローカル環境を揃える
+      # .nvmrc（24.22.1）に合わせ、engines.node >=24.22.1 とローカル環境を揃える
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -35,18 +41,26 @@ jobs:
       - name: Type check
         run: npm run check
 
-      # 静的サイトが実際にビルドできることを確認する
+      # 静的サイトが実際にビルドできることを確認する（CSP ハッシュ生成も含む）
       - name: Build
         run: npm run build
+
+      # 生成された CSP がコミット済みファイルと一致すること（インライン変更の検知）
+      - name: CSP policy up to date
+        run: git diff --exit-code -- workers/csp-policy.generated.js
 
       # tokens.css の色ペアが WCAG AA を満たすか機械判定する（推測禁止ルールの根拠）
       # 根拠: docs/decisions.md「コントラスト検証ツール scripts/contrast.mjs」
       - name: Contrast check
         run: npm run contrast
 
+      # Basic 認証ヘルパーとセキュリティヘッダーのユニット検証（シークレット不要）
+      - name: Basic auth unit check
+        run: npm run test:basic-auth
+
       # Playwright のブラウザバイナリをキャッシュし、毎回のフルダウンロードを避ける
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}

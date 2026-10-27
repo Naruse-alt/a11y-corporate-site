@@ -19,22 +19,10 @@ const { path = '/' } = Astro.props as { path?: string };
 ---
 
 <header class="site-header" data-site-header>
-  <div class="container site-header__inner">
+  <div class="container container--wide site-header__inner">
     <a class="site-header__brand" href="/">
-      {/* ブランドマーク（装飾）。currentColor 描画で forced-colors にも追従。 */}
-      <span class="site-header__mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="28" height="28" focusable="false">
-          <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2.5" />
-          <path
-            d="M9 16.5l4.5 4.5L23 11"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </span>
+      {/* 装飾ドット。意味は持たせず色だけに依存しない (1.4.1) */}
+      <span class="site-header__mark" aria-hidden="true"></span>
       <span class="site-header__wordmark">Inclusive&nbsp;Works</span>
     </a>
 
@@ -183,12 +171,21 @@ const { path = '/' } = Astro.props as { path?: string };
   }
 
   .site-header__mark {
-    display: inline-flex;
-    color: var(--color-primary);
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    flex-shrink: 0;
   }
 
   .site-header__brand:hover .site-header__wordmark {
     text-decoration: underline;
+  }
+
+  @media (forced-colors: active) {
+    .site-header__mark {
+      background-color: CanvasText;
+    }
   }
 
   .primary-nav {
@@ -371,6 +368,13 @@ const { path = '/' } = Astro.props as { path?: string };
   @media (max-width: 48rem) {
     [data-nav-enhanced] .primary-nav {
       display: none;
+    }
+    /*
+     * インラインナビ非表示時は auto マージンの担い手が消えるため、
+     * 操作群（テーマ切替・メニュー）をコンテナ右端へ送る。
+     */
+    [data-nav-enhanced] .site-header__actions {
+      margin-inline-start: auto;
     }
   }
 
