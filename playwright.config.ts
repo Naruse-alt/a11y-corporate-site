@@ -23,7 +23,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // オーバーレイ型でない縦スクロールバーを出し、100vw 由来の横はみ出しを再現しやすくする
+        launchOptions: {
+          args: ['--disable-features=OverlayScrollbar'],
+        },
+      },
     },
   ],
   webServer: {

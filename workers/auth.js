@@ -3,6 +3,8 @@
  * 資格情報は環境変数経由のみ。リポジトリに値を置かない。
  */
 
+import { applySecurityHeaders } from './security-headers.js';
+
 const encoder = new TextEncoder();
 
 /**
@@ -59,7 +61,10 @@ export function verifyBasicAuth(authorizationHeader, expectedUser, expectedPass)
   const user = decoded.slice(0, index);
   const pass = decoded.slice(index + 1);
 
-  if (!timingSafeEqual(expectedUser, user) || !timingSafeEqual(expectedPass, pass)) {
+  // 短絡評価でパスワード比較が省略されないよう、両方を先に評価する。
+  const userMatches = timingSafeEqual(expectedUser, user);
+  const passMatches = timingSafeEqual(expectedPass, pass);
+  if (!(userMatches && passMatches)) {
     return { ok: false, status: 401 };
   }
 
@@ -74,7 +79,7 @@ export function verifyBasicAuth(authorizationHeader, expectedUser, expectedPass)
  * @returns {Response}
  */
 export function unauthorizedResponse(status, body, options = {}) {
-  const headers = new Headers({
+  let headers = new Headers({
     'Cache-Control': 'no-store',
     'Content-Type': 'text/plain; charset=UTF-8',
   });
@@ -83,6 +88,9 @@ export function unauthorizedResponse(status, body, options = {}) {
   if (options.challenge !== false && status === 401) {
     headers.set('WWW-Authenticate', 'Basic realm="Inclusive Works", charset="UTF-8"');
   }
+
+  // 401/400 も _headers では届かないため、Worker 応答にここで付与する。
+  headers = applySecurityHeaders(headers);
 
   return new Response(body, { status, headers });
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- (a) "IW" monogram in a rounded square. Brand primary #007370, white strokes. -->
+  <rect width="32" height="32" rx="7" fill="#007370"/>
+  <g fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7.5 9v14"/>
+    <path d="M12.5 9l3 14 3.75-10 3.75 10 3-14"/>
+  </g>
+</svg>

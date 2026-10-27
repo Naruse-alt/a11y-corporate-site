@@ -38,11 +38,11 @@ import { getCriterion } from '../data/criteria';
         {
           annotationGroups.map((group) => (
             <li>
-              <a href={`#${group.id}`}>{group.heading}</a>
+              <a class="link-quiet" href={`#${group.id}`}>{group.heading}</a>
               <ol>
                 {group.items.map((item) => (
                   <li>
-                    <a href={`#${item.id}`}>{item.title}</a>
+                    <a class="link-quiet" href={`#${item.id}`}>{item.title}</a>
                   </li>
                 ))}
               </ol>
@@ -81,7 +81,7 @@ import { getCriterion } from '../data/criteria';
 
               {item.demoHref && item.demoLabel && (
                 <p>
-                  <a href={item.demoHref}>{item.demoLabel}</a>
+                  <a class="link-quiet" href={item.demoHref}>{item.demoLabel}</a>
                 </p>
               )}
             </section>
