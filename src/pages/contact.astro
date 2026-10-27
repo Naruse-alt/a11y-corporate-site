@@ -19,20 +19,14 @@ import AnnotationCue from '../components/AnnotationCue.astro';
       <h1>お問い合わせ</h1>
       <p class="lead">
         サービスやアクセシビリティ方針についてのご質問を想定したデモフォームです。
-        実送信は行いません。検証エラーと成功時の通知を確認できます。
+        検証エラーと成功時の通知を確認できます。
+      </p>
+      <p class="contact-page__note">
+        Inclusive Works は架空の会社です。このフォームから実際に送信・連絡することはできません。
       </p>
     </header>
 
     <ContactForm />
-
-    <section class="section contact-page__alt" aria-labelledby="contact-alt-heading">
-      <h2 id="contact-alt-heading">メールでの連絡</h2>
-      <p>
-        デモ以外の経路として、フィードバックは
-        <a href="mailto:accessibility@example.com">accessibility@example.com</a>
-        でも受け付けます（架空のアドレスです）。
-      </p>
-    </section>
 
     <AnnotationCue topicId="contact" />
   </article>
@@ -49,5 +43,10 @@ import AnnotationCue from '../components/AnnotationCue.astro';
 
   .contact-page__intro h1 {
     font-size: var(--text-3xl);
+  }
+
+  .contact-page__note {
+    margin-block-start: var(--space-4);
+    color: var(--color-text-muted);
   }
 </style>
