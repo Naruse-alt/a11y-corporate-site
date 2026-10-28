@@ -31,6 +31,7 @@ EC サイトの構築・運用に関わるなかで、「誰にとっても使�
 適合宣言は行いません。
 
 自動チェックで拾える範囲（例: `scripts/contrast.mjs`、Playwright + axe による機械検出の回帰）と、スクリーンリーダーなど人手の確認が必要な範囲は分けて扱います。  
+人手の確認は、Windows ナレーターでの読み上げとキーボードのみの操作で行っています。  
 axe の違反ゼロをもってレベル AA 達成とは判断しません。
 
 サイト上の方針文: [/accessibility/](https://a11y-corporate-site.naruse-works.workers.dev/accessibility/)
